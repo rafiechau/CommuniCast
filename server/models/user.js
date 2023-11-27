@@ -8,8 +8,17 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.hasMany(models.Post, {foreignKey: "userId"})
       this.hasMany(models.Comment, {foreignKey: "userId"})
+      User.hasMany(models.Post, {
+        as: 'user',
+        foreignKey: { name: 'userId'},
+        onDelete: 'CASCADE'
+      });
+      User.belongsToMany(models.Post, {
+        as: 'like',
+        foreignKey: 'userId',
+        through: models.Vote
+      })
     }
   }
   User.init(
