@@ -9,6 +9,16 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      User.hasMany(models.Post, {
+        as: 'user',
+        foreignKey: { name: 'userId'},
+        onDelete: 'CASCADE'
+      });
+      User.belongsToMany(models.Post, {
+        as: 'like',
+        foreignKey: 'userId',
+        through: models.Vote
+      })
     }
   }
   User.init(
