@@ -7,10 +7,11 @@ import MessageIcon from '@mui/icons-material/Message';
 import HomeIcon from '@mui/icons-material/Home';
 import PaymentIcon from '@mui/icons-material/Payment';
 import CardItem from '@components/CardItem';
+import CardDetail from '@components/CardDetail';
 import { BottomNavigation, BottomNavigationAction, Box } from '@mui/material';
 import classes from './style.module.scss';
 
-const Home = () => {
+const Detail = () => {
   const dispatch = useDispatch();
   const [value, setValue] = useState(0);
   // useEffect(() => {
@@ -62,19 +63,8 @@ const Home = () => {
         </div>
         <div className={classes.appMain}>
           <div className={classes.feed}>
-            <div className={classes.feedHeader}>
-              <h2>Home</h2>
-            </div>
-            {/* tweet box  */}
-
-            {/* post tweet  */}
             <div className={classes.post}>
-              <CardItem />
-              <CardItem />
-              <CardItem />
-              <CardItem />
-              <CardItem />
-              <CardItem />
+              <CardDetail />
             </div>
           </div>
         </div>
@@ -83,4 +73,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Detail;

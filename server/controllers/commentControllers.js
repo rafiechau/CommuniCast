@@ -4,8 +4,9 @@ const Joi = require("joi")
 const postComment = async (req, res) => {
   try {
     // const userId = req.id
-    const userId = 1
-    const { id } = req.params
+    // const { id } = req.params
+    const userId = 1;
+    const id = 1;
     const transSchema = Joi.object({
       comment: Joi.string().required(),
     });

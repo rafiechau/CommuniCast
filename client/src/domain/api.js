@@ -1,10 +1,10 @@
 import config from '@config/index';
 import { merge } from 'lodash';
-
 import request from '@utils/request';
 
 const urls = {
   ping: 'ping.json',
+  addComment: '/users/comment',
 };
 
 export const callAPI = async (endpoint, method, header = {}, params = {}, data = {}) => {
@@ -28,3 +28,4 @@ export const callAPI = async (endpoint, method, header = {}, params = {}, data =
 };
 
 export const ping = () => callAPI(urls.ping, 'get');
+export const addCommentApi = (data) => callAPI(urls.addComment, 'POST', {}, {}, data)

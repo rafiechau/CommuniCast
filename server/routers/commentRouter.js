@@ -6,7 +6,8 @@ const {
 } = require("../controllers/commentControllers")
 
 // data user ditaro di middlewares = req.fullName
-router.post("/comment/:id", postComment);
+router.post("/comment", postComment);
+// router.post("/comment/:id", postComment);
 // router.delete("/comment/:id", dpostC)
 
 module.exports = router;
