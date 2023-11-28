@@ -72,7 +72,7 @@ const Home = ({ allPosts }) => {
             <MessageIcon />
             <h2>Message</h2>
           </div>
-          <div className={classes.sidebarOption}>
+          <div onClick={handlePayment} className={classes.sidebarOption}>
             <PaymentIcon />
             <h2>Payments</h2>
           </div>

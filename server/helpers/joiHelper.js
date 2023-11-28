@@ -40,3 +40,9 @@ exports.schemaPost = {
   image: joi.string().allow('').optional(),
 };
 
+//Schema User
+exports.schemaUser = {
+  fullName: joi.string().min(3).required(),
+  email: joi.string().email().required(),
+  password: joi.string().required(),
+};

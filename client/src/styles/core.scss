@@ -21,6 +21,7 @@ body {
   margin: 0;
   background-color: var(--color-bg-secondary);
   color: var(--color-text);
+  box-sizing: border-box;
 }
 
 html[data-theme='light'] {
