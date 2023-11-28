@@ -21,6 +21,7 @@ function* sagaHandleLogin({ data, callback }) {
     yield put(setUser({ role, id, fullName }));
     toast.success(response.message);
   } catch (error) {
+    console.log(error);
     if (error?.response?.status === 400) {
       toast.error(error.response.data.message);
     } else {

@@ -18,11 +18,17 @@ import ShareIcon from '@mui/icons-material/Share';
 import { createStructuredSelector } from 'reselect';
 import { useState } from 'react';
 import config from '@config/index';
+import { useNavigate } from 'react-router-dom';
 
 const CardItem = ({ post }) => {
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const [loadingImg, setLoadingImage] = useState(true);
   const open = Boolean(anchorEl);
+
+  const navigateDetails = () => {
+    navigate(`/post/${post?.id}`);
+  };
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -70,7 +76,10 @@ const CardItem = ({ post }) => {
         <MenuItem onClick={handleUpdate}>Update Post</MenuItem>
         <MenuItem onClick={handleDelete}>Delete Post</MenuItem>
       </Menu>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px' }}>
+      <Box
+        sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px' }}
+        onClick={navigateDetails}
+      >
         <CardContent sx={{ flex: '1 1 auto' }}>
           <Typography gutterBottom variant="h5" component="div">
             {post?.title}

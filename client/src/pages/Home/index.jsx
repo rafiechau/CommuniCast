@@ -12,7 +12,7 @@ import { injectIntl } from 'react-intl';
 // import { useNavigate } from 'react-router-dom';
 import classes from './style.module.scss';
 import { selectAllPosts } from './selectors';
-import { getAllPosts } from './actions';
+import { getAllPosts, paymentRequest } from './actions';
 
 const Home = ({ allPosts }) => {
   const dispatch = useDispatch();
@@ -34,6 +34,9 @@ const Home = ({ allPosts }) => {
   if (allPosts.error) {
     return <div>Error: {allPosts.error.message}</div>;
   }
+  const handlePayment = () => {
+    dispatch(paymentRequest());
+  };
 
   return (
     <div className={classes.app}>

@@ -10,13 +10,17 @@ import CardItem from '@components/CardItem';
 import CardDetail from '@components/CardDetail';
 import { BottomNavigation, BottomNavigationAction, Box } from '@mui/material';
 import classes from './style.module.scss';
+import { useNavigate } from 'react-router-dom';
 
 const Detail = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [value, setValue] = useState(0);
   // useEffect(() => {
   //   dispatch(ping());
   // }, [dispatch]);
+
+  
 
   return (
     <div className={classes.app}>

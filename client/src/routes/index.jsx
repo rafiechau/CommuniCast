@@ -17,8 +17,32 @@ const routes = [
     component: Home,
     layout: MainLayout,
   },
+  {
+    path: '/login',
+    name: 'Login',
+    protected: false,
+    component: Login,
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    protected: false,
+    component: Register,
+  },
+  {
+    path: '/forgotPassword',
+    name: 'Forgot Password',
+    protected: false,
+    component: ForgotPassword,
+  },
+  {
+    path: '/:token/resetPassword',
+    name: 'Reset Password',
+    protected: false,
+    component: ResetPassword,
+  },
   { path: '*', name: 'Not Found', component: NotFound, layout: MainLayout, protected: false },
-  { path: '/detail', name: 'Detail', component: Detail, layout: MainLayout, protected: false },
+  { path: '/post/:postId', name: 'Detail', component: Detail, layout: MainLayout, protected: false },
 ];
 
 export default routes;
