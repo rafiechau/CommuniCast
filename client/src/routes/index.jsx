@@ -1,10 +1,12 @@
 import MainLayout from '@layouts/MainLayout';
+import ForgotPassword from '@pages/ForgotPassword';
 
 import Home from '@pages/Home';
 import Login from '@pages/Login';
 import NotFound from '@pages/NotFound';
 import Register from '@pages/Register';
 import Detail from '@pages/Detail';
+import ResetPassword from '@pages/ResetPassword';
 
 const routes = [
   {
@@ -25,6 +27,18 @@ const routes = [
     name: 'Register',
     protected: false,
     component: Register,
+  },
+  {
+    path: '/forgotPassword',
+    name: 'Forgot Password',
+    protected: false,
+    component: ForgotPassword,
+  },
+  {
+    path: '/:token/resetPassword',
+    name: 'Reset Password',
+    protected: false,
+    component: ResetPassword,
   },
   { path: '*', name: 'Not Found', component: NotFound, layout: MainLayout, protected: false },
   { path: '/detail', name: 'Detail', component: Detail, layout: MainLayout, protected: false },

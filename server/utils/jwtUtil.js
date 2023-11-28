@@ -47,7 +47,7 @@ exports.createTokenVerifyEmail = (otp, email) => {
   if (!otp || !email) {
     return false;
   }
-  return jwt.sign({ otp, email }, secretKeyVerifyEmail, { expiresIn: "10m" });
+  return jwt.sign({ otp, email }, secretKeyVerifyEmail, { expiresIn: "2m" });
 };
 
 exports.verifyTokenVerifyEmail = (token) => {

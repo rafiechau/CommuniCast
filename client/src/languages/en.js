@@ -22,6 +22,8 @@ export default {
   app_user_otp_require_message: 'OTP is require',
   app_user_otp_min_length: 'OTP minimum 4 character',
   app_user_password: 'Password',
+  app_user_new_password: 'New Password',
+  app_user_reset_password: 'Reset Password',
   app_user_password_require_message: 'Password is require',
   app_user_password_min_length: 'Password minimum 8 character',
   app_user_password_show: 'Show password',
