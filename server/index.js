@@ -3,19 +3,18 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const routes = require('./routes/index');
-const { handleResponse } = require('./utils/responseHandler');
+const { handleNotFound } = require('./helpers/handleResponseHelper');
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/uploads', express.static('uploads'));
-
+app.use("/uploads", express.static("uploads"))
 app.use('/api', routes);
 
 app.all('*', (req, res) => {
-  return handleResponse(res, 404, { message: 'API Not Found' });
+  return handleNotFound(res)
 });
 
-app.listen(process.env.PORT, () => {
-  console.log(`🚀 Server running on port ${process.env.PORT}`);
+app.listen(process.env.APP_PORT, () => {
+  console.log(`🚀 Server running on port ${process.env.APP_PORT}`);
 });
