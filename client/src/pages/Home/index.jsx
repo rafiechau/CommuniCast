@@ -19,7 +19,6 @@ const Home = () => {
   // }, [dispatch]);
 
   const handlePayment = () => {
-    console.log("babi");
     dispatch(paymentRequest());
   };
 
