@@ -1,21 +1,20 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
+require('dotenv').config()
+const express = require("express");
+const cors = require("cors");
+const index = require("./routers/index");
+const path = require('path')
+
+const PORT = process.env.PORT || 3000;
+
 const app = express();
-const routes = require('./routes/index');
-const { handleResponse } = require('./utils/responseHandler');
 
 app.use(cors());
+app.use(express.static("public"));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use('/uploads', express.static('uploads'));
+app.use(express.urlencoded({ extended: false }));
+app.use("/upload", express.static(path.join(__dirname, "./upload")))
+app.use(index);
 
-app.use('/api', routes);
-
-app.all('*', (req, res) => {
-  return handleResponse(res, 404, { message: 'API Not Found' });
-});
-
-app.listen(process.env.PORT, () => {
-  console.log(`🚀 Server running on port ${process.env.PORT}`);
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
