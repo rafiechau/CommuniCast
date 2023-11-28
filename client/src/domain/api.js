@@ -5,6 +5,7 @@ import request from '@utils/request';
 
 const urls = {
   ping: 'ping.json',
+  posts: 'posts',
 };
 
 export const callAPI = async (endpoint, method, header = {}, params = {}, data = {}) => {
@@ -28,3 +29,5 @@ export const callAPI = async (endpoint, method, header = {}, params = {}, data =
 };
 
 export const ping = () => callAPI(urls.ping, 'get');
+
+export const getPostsApi = () => callAPI(`${urls.posts}/`, 'GET');

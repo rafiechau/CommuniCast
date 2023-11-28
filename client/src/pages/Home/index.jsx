@@ -1,8 +1,7 @@
-/* eslint-disable react/button-has-type */
+import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import TwitterIcon from '@mui/icons-material/Twitter';
-import { ping } from '@containers/App/actions';
 import MessageIcon from '@mui/icons-material/Message';
 import HomeIcon from '@mui/icons-material/Home';
 import PaymentIcon from '@mui/icons-material/Payment';
@@ -10,14 +9,31 @@ import CardItem from '@components/CardItem';
 import { BottomNavigation, BottomNavigationAction, Box } from '@mui/material';
 import { createStructuredSelector } from 'reselect';
 import { injectIntl } from 'react-intl';
+// import { useNavigate } from 'react-router-dom';
 import classes from './style.module.scss';
+import { selectAllPosts } from './selectors';
+import { getAllPosts } from './actions';
 
-const Home = () => {
+const Home = ({ allPosts }) => {
   const dispatch = useDispatch();
+  // const navigate = useNavigate();
   const [value, setValue] = useState(0);
+
+  console.log(allPosts);
+
   useEffect(() => {
-    dispatch(ping());
+    dispatch(getAllPosts());
   }, [dispatch]);
+
+  // Penanganan jika allPosts belum tersedia atau dalam keadaan loading
+  if (!allPosts || allPosts.loading) {
+    return <div>Loading...</div>; // Atau komponen loading lainnya
+  }
+
+  // Penanganan jika terjadi error
+  if (allPosts.error) {
+    return <div>Error: {allPosts.error.message}</div>;
+  }
 
   return (
     <div className={classes.app}>
@@ -60,7 +76,7 @@ const Home = () => {
             <PaymentIcon />
             <h2>Payments</h2>
           </div>
-          <button className={classes.sidebarTweet}>
+          <button type="submit" className={classes.sidebarTweet}>
             <span>Tweet</span>
           </button>
         </div>
@@ -73,12 +89,11 @@ const Home = () => {
 
             {/* post tweet  */}
             <div className={classes.post}>
-              <CardItem />
-              <CardItem />
-              <CardItem />
-              <CardItem />
-              <CardItem />
-              <CardItem />
+              {allPosts.data && allPosts.data.length > 0 ? (
+                allPosts.data.map((post) => <CardItem key={post.id} post={post} />)
+              ) : (
+                <div>No posts available</div> // Tampilkan jika tidak ada post
+              )}
             </div>
           </div>
         </div>
@@ -87,8 +102,12 @@ const Home = () => {
   );
 };
 
-Home.propTypes = {};
+Home.propTypes = {
+  allPosts: PropTypes.object,
+};
 
-const mapStateToProps = createStructuredSelector({});
+const mapStateToProps = createStructuredSelector({
+  allPosts: selectAllPosts,
+});
 
 export default injectIntl(connect(mapStateToProps)(Home));
