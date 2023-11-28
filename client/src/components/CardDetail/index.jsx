@@ -24,7 +24,7 @@ const CommentCard = ({ commenter, text }) => {
                 @{commenter}
               </Typography>
             </div>
-            <div style={{ display: 'flex', lineHeight: 0 }}>
+            <div style={{ display: 'flex', lineHeight: 0, cursor: 'pointer' }}>
               <p onClick={() => (isEditing ? setIsEditing(false) : setIsEditing(true))}>...</p>
             </div>
           </div>
@@ -38,6 +38,7 @@ const CommentCard = ({ commenter, text }) => {
                 variant="standard"
               />
               <button >Save</button>
+              <button >Delete</button>
             </>
           ) : (
             <Typography sx={{ color: '#fff' }} variant="body2">

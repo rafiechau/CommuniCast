@@ -7,6 +7,7 @@ import MessageIcon from '@mui/icons-material/Message';
 import HomeIcon from '@mui/icons-material/Home';
 import PaymentIcon from '@mui/icons-material/Payment';
 import CardItem from '@components/CardItem';
+import { paymentRequest } from './actions';
 import { BottomNavigation, BottomNavigationAction, Box } from '@mui/material';
 import classes from './style.module.scss';
 
@@ -16,6 +17,11 @@ const Home = () => {
   // useEffect(() => {
   //   dispatch(ping());
   // }, [dispatch]);
+
+  const handlePayment = () => {
+    console.log("babi");
+    dispatch(paymentRequest());
+  };
 
   return (
     <div className={classes.app}>
@@ -52,7 +58,7 @@ const Home = () => {
             <MessageIcon />
             <h2>Message</h2>
           </div>
-          <div className={classes.sidebarOption}>
+          <div onClick={handlePayment} className={classes.sidebarOption}>
             <PaymentIcon />
             <h2>Payments</h2>
           </div>
