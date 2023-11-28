@@ -1,3 +1,4 @@
+import CryptoJS from 'crypto-js';
 import toast from 'react-hot-toast';
 import { takeLatest, call, put } from 'redux-saga/effects';
 
@@ -12,8 +13,6 @@ import {
   actionSetVerify,
 } from '@pages/Register/actions';
 import { showPopup, setLoading } from '@containers/App/actions';
-
-const CryptoJS = require('crypto-js');
 
 function* sagaHandleSendVerifyEmail({ data }) {
   yield put(setLoading(true));

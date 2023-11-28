@@ -1,3 +1,4 @@
+import CryptoJS from 'crypto-js';
 import toast from 'react-hot-toast';
 import { jwtDecode } from 'jwt-decode';
 import { takeLatest, call, put } from 'redux-saga/effects';
@@ -8,13 +9,10 @@ import { showPopup, setLoading } from '@containers/App/actions';
 import { setLogin, setToken, setUser } from '@containers/Client/actions';
 import { LOGIN, LOGOUT } from '@pages/Login/constants';
 
-const CryptoJS = require('crypto-js');
-
 function* sagaHandleLogin({ data, callback }) {
   yield put(setLoading(true));
   try {
     data.password = CryptoJS.AES.encrypt(data.password, import.meta.env.VITE_CRYPTOJS_SECRET).toString();
-
     const response = yield call(apiHandleLogin, data);
     yield call(callback);
     yield put(setLogin(true));

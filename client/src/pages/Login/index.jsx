@@ -39,9 +39,9 @@ const Login = ({ login, intl: { formatMessage } }) => {
   }, [formatMessage, isAfterLogin, login, navigate]);
 
   const onSubmit = (data) => {
+    setIsAfterLogin(true);
     dispatch(
       actionHandleLogin(data, () => {
-        setIsAfterLogin(true);
         setTimeout(() => {
           navigate('/');
         }, 1500);
@@ -97,7 +97,7 @@ const Login = ({ login, intl: { formatMessage } }) => {
             </p>
             <p className={classes.nav}>
               <FormattedMessage id="app_forgot_password" />?{' '}
-              <Link to="/forgot-password">
+              <Link to="/forgotPassword">
                 <FormattedMessage id="app_forgot_password" />
               </Link>
             </p>
@@ -107,7 +107,7 @@ const Login = ({ login, intl: { formatMessage } }) => {
       <div className={classes.imgWrap}>
         {imageLoading && <Skeleton className={classes.skeleton} variant="rectangular" />}
         <img
-          src="https://source.unsplash.com/random/?login"
+          src="https://source.unsplash.com/random/?sosial-media"
           alt=""
           onLoad={() => setImageLoading(false)}
           loading="lazy"

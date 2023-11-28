@@ -1,0 +1,59 @@
+@import '@styles/base';
+
+.mainWrap {
+  @include directionX;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100vw;
+  max-width: 100%;
+  .forgotPasswordCard {
+    @include directionY;
+    justify-content: center;
+    align-items: center;
+    @include apply-at-md-size {
+      width: 100%;
+      padding: 5rem;
+    }
+    width: 100%;
+    padding: 2rem;
+    background-color: var(--color-bg-secondary);
+    .forgotPasswordHeader {
+      width: 100%;
+      text-align: center;
+      font-size: larger;
+    }
+    .form {
+      .buttonSubmit {
+        width: fit-content;
+        background-color: var(--color-text);
+        color: var(--color-bg-secondary);
+        border-radius: 2.5rem;
+        padding: 0.5rem 2.5rem 0.5rem 2.5rem;
+        margin: auto;
+        margin-top: 0.75rem;
+        box-shadow: none;
+        cursor: pointer;
+        &:hover {
+          transform: scale(1.1, 1.1);
+        }
+      }
+    }
+    .showPassword {
+      @include directionX;
+      align-items: center;
+      padding-top: 0.25rem;
+      font-size: small;
+    }
+  }
+  .formNav {
+    @include directionY;
+    width: 100%;
+    padding-top: 1rem;
+    gap: 0.25rem;
+    .nav {
+      margin: 0;
+      font-size: small;
+    }
+  }
+}

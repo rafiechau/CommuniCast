@@ -8,7 +8,7 @@ export default {
   app_popup_error_message: 'Maaf, telah terjadi kesalahan. Silakan coba beberapa saat lagi',
   app_popup_close_button_label: 'Tutup',
 
-  app_already_login: 'You sudah Login',
+  app_already_login: 'Kamu sudah Login',
 
   // login and register
   app_header_login: 'Masuk',
@@ -22,9 +22,11 @@ export default {
   app_user_otp_require_message: 'OTP dibutuhkan',
   app_user_otp_min_length: 'OTP minimal 4 karakter',
   app_user_password: 'Kata Sandi',
+  app_user_new_password: 'Kata Sandi Baru',
+  app_user_reset_password: 'Reset kata Sandi',
   app_user_password_require_message: 'Kata Sandi dibutuhkan',
   app_user_password_min_length: 'Kata Sandi minimal 8 karakter',
-  app_user_password_show: 'Tampilkan Password',
+  app_user_password_show: 'Tampilkan Kata Sandi',
   app_no_account: 'Tidak ada akun? ',
   app_have_account: 'Punya akun? ',
   app_forgot_password: 'Lupa Password',

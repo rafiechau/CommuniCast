@@ -50,7 +50,12 @@ const Register = ({ login, step, intl: { formatMessage } }) => {
       </div>
       <div className={classes.imgWrap}>
         {imageLoading && <Skeleton className={classes.skeleton} variant="rectangular" />}
-        <img src="https://source.unsplash.com/random" alt="" onLoad={() => setImageLoading(false)} loading="lazy" />
+        <img
+          src="https://source.unsplash.com/random/?sosial-media"
+          alt=""
+          onLoad={() => setImageLoading(false)}
+          loading="lazy"
+        />
       </div>
     </main>
   );
