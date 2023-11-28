@@ -8,7 +8,6 @@ import App from '@containers/App';
 import Language from '@containers/Language';
 
 import store, { persistor } from '@store';
-import { Toaster } from 'react-hot-toast';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
