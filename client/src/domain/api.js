@@ -4,6 +4,7 @@ import request from '@utils/request';
 
 const urls = {
   ping: 'ping.json',
+  posts: 'posts',
   user: 'user',
   addComment: '/users/comment',
   editComment: '/users/comment',
@@ -33,6 +34,7 @@ export const callAPI = async (endpoint, method, header = {}, params = {}, data =
 
 export const ping = () => callAPI(urls.ping, 'get');
 
+export const getPostsApi = () => callAPI(`${urls.posts}/`, 'GET');
 export const addCommentApi = (data) => callAPI(urls.addComment, 'POST', {}, {}, data);
 export const editCommentApi = ({ formDataObj, idComment }) =>
   callAPI(`${urls.editComment}/${idComment}`, 'PUT', {}, {}, formDataObj);

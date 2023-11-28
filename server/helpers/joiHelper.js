@@ -31,6 +31,15 @@ const handleValidateJoi = (data, schema, field) => {
   }
 };
 
+
+//Schema post
+exports.schemaPost = {
+  title: joi.string().required(),
+  shortDescription: joi.string().required(),
+  des: joi.string().required(),
+  image: joi.string().allow('').optional(),
+};
+
 //Schema User
 exports.schemaUser = {
   fullName: joi.string().min(3).required(),

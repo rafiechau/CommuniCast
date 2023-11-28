@@ -59,14 +59,15 @@
                 cursor: pointer;
             }
             .sidebarTweet:hover{
-                background-color: rgb(30, 142, 227) !important;
+                background-color: #1991db;
                 cursor: pointer;
             }
         }
         .appMain{
             flex: 1;
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
+            
             background-color: #e6ecf0;
             .feed{
                 flex: 1;
@@ -80,21 +81,58 @@
                     position: sticky;
                     top: 0;
                     z-index: 100;
+                    .arrowBackFeedHeader {
+                        display: flex;
+                        align-items: center;
+                        margin-right: 10px;
+                    }
+                    h2 {
+                        font-size: 1.5rem;
+                        font-weight: 800;
+                        color: #333;
+                    }
+                }
+                .detailTweet, .comment {
+                    background-color: white;
+                    margin: 20px;
+                    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+                    border-radius: 15px;
+                    .tweetHeader{
+                        display: flex;
+                        align-items: center;
+                        padding: 10px;
+                        .tweetInfo {
+                            margin-left: 10px;
+                        }
+                    }
+                    .tweetActions {
+                        display: flex;
+                        justify-content: start;
+                        margin-top: 10px;
+                      
+                        .MuiIconButton-root {
+                          margin-right: 10px;
+                        }
+                    }
+                }
+                
+                .feedHeader{
+                    position: sticky;
+                    top: 0;
+                    background-color: #f8f8f8;
+                    z-index: 100;
+                    border-bottom: 1px solid #ddd;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    padding: 10px;
+                    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
                     h2{
                         font-size: 1.5rem;
                         flex: 1;
                         font-weight: 800;
                         color: #333;
                     }
-                }
-                .post{
-                    padding: 20px;
-                    border-radius: 15px;
-                    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-                }
-                .CardItem:hover {
-                    background-color: #f4f4f4; /* Warna hover */
-                    transition: background-color 200ms ease-in-out; /* Transisi yang halus */
                 }
             }
         }
@@ -104,13 +142,15 @@
 
 @media screen and (max-width: 576px){
     /* Mobile */
-    .appMainContent{
-                flex-direction: column;
-                .sidebar{
-                    display: none;
-                }
-                .appMain{
-                    flex: 1;
-                }
-            }
+    .appMainContent {
+        flex-direction: column;
+
+        .sidebar {
+            display: none;
+        }
+
+        .appMain {
+            flex: 1;
+        }
+    }
 }
