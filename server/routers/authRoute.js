@@ -6,6 +6,7 @@ const {
   checkOtpVerifyEmail,
   forgotPassword,
   setResetPassword,
+  getProfile,
 } = require("../controllers/authController");
 
 const {
@@ -14,6 +15,9 @@ const {
 const {
   verifySendResetMiddleware,
 } = require("../middleware/sendResetPassMiddleware");
+const {
+  authenticationMiddleware,
+} = require("../middleware/AuthenticationMiddleware");
 
 const router = Router();
 
@@ -24,4 +28,6 @@ router.post("/checkOtpVerifyEmail", verifyEmailMiddleware, checkOtpVerifyEmail);
 router.post("/forgotPassword", forgotPassword);
 router.put("/resetPassword", verifySendResetMiddleware, setResetPassword);
 
+router.use(authenticationMiddleware);
+router.get("/profile", getProfile);
 module.exports = router;

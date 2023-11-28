@@ -11,6 +11,7 @@ export default {
   app_already_login: 'Kamu sudah Login',
 
   // login and register
+  app_profile: 'Profil',
   app_header_login: 'Masuk',
   app_header_register: 'Daftar',
   app_user_fullName: 'Nama Lengkap',
@@ -33,4 +34,5 @@ export default {
   app_next: 'Lanjut',
   app_back: 'Kembali',
   app_resend: 'Kirim Ulang',
+  app_profile_edit: 'Ubah Profil',
 };

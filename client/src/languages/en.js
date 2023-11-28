@@ -11,6 +11,7 @@ export default {
   app_already_login: 'You already Login',
 
   // login and register
+  app_profile: 'Profile',
   app_header_login: 'Login',
   app_header_register: 'Register',
   app_user_fullName: 'Fullname',
@@ -33,4 +34,5 @@ export default {
   app_next: 'Next',
   app_back: 'Back',
   app_resend: 'Resend',
+  app_profile_edit: 'Edit Profile',
 };
