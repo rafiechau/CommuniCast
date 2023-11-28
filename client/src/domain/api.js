@@ -1,11 +1,9 @@
 import config from '@config/index';
 import { merge } from 'lodash';
-
 import request from '@utils/request';
 
 const urls = {
   ping: 'ping.json',
-  user: 'user',
 };
 
 export const callAPI = async (endpoint, method, header = {}, params = {}, data = {}) => {

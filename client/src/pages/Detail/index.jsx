@@ -7,21 +7,16 @@ import MessageIcon from '@mui/icons-material/Message';
 import HomeIcon from '@mui/icons-material/Home';
 import PaymentIcon from '@mui/icons-material/Payment';
 import CardItem from '@components/CardItem';
-import { paymentRequest } from './actions';
+import CardDetail from '@components/CardDetail';
 import { BottomNavigation, BottomNavigationAction, Box } from '@mui/material';
 import classes from './style.module.scss';
 
-const Home = () => {
+const Detail = () => {
   const dispatch = useDispatch();
   const [value, setValue] = useState(0);
   // useEffect(() => {
   //   dispatch(ping());
   // }, [dispatch]);
-
-  const handlePayment = () => {
-    console.log("babi");
-    dispatch(paymentRequest());
-  };
 
   return (
     <div className={classes.app}>
@@ -58,7 +53,7 @@ const Home = () => {
             <MessageIcon />
             <h2>Message</h2>
           </div>
-          <div onClick={handlePayment} className={classes.sidebarOption}>
+          <div className={classes.sidebarOption}>
             <PaymentIcon />
             <h2>Payments</h2>
           </div>
@@ -68,19 +63,8 @@ const Home = () => {
         </div>
         <div className={classes.appMain}>
           <div className={classes.feed}>
-            <div className={classes.feedHeader}>
-              <h2>Home</h2>
-            </div>
-            {/* tweet box  */}
-
-            {/* post tweet  */}
             <div className={classes.post}>
-              <CardItem />
-              <CardItem />
-              <CardItem />
-              <CardItem />
-              <CardItem />
-              <CardItem />
+              <CardDetail />
             </div>
           </div>
         </div>
@@ -89,4 +73,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Detail;
