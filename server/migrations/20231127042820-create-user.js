@@ -24,9 +24,6 @@ module.exports = {
       imagePath: {
         type: Sequelize.STRING,
       },
-      isVerify: {
-        type: Sequelize.BOOLEAN,
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

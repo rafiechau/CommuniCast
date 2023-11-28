@@ -1,5 +1,8 @@
 "use strict";
 const { Model } = require("sequelize");
+
+const { hashPassword } = require("../utils/bcryptUtil");
+
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -10,15 +13,15 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       User.hasMany(models.Post, {
-        as: 'user',
-        foreignKey: { name: 'userId'},
-        onDelete: 'CASCADE'
+        as: "user",
+        foreignKey: { name: "userId" },
+        onDelete: "CASCADE",
       });
       User.belongsToMany(models.Post, {
-        as: 'like',
-        foreignKey: 'userId',
-        through: models.Vote
-      })
+        as: "like",
+        foreignKey: "userId",
+        through: models.Vote,
+      });
     }
   }
   User.init(
@@ -28,9 +31,16 @@ module.exports = (sequelize, DataTypes) => {
       password: DataTypes.STRING,
       role: DataTypes.STRING,
       imagePath: DataTypes.STRING,
-      isVerify: DataTypes.BOOLEAN,
     },
     {
+      hooks: {
+        beforeCreate: (user) => {
+          user.password = hashPassword(user.password);
+          if (!user.role) {
+            user.role = "standard";
+          }
+        },
+      },
       sequelize,
       modelName: "User",
     }
