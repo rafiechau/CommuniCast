@@ -1,6 +1,6 @@
 /* eslint-disable react/button-has-type */
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import { ping } from '@containers/App/actions';
 import MessageIcon from '@mui/icons-material/Message';
@@ -8,6 +8,8 @@ import HomeIcon from '@mui/icons-material/Home';
 import PaymentIcon from '@mui/icons-material/Payment';
 import CardItem from '@components/CardItem';
 import { BottomNavigation, BottomNavigationAction, Box } from '@mui/material';
+import { createStructuredSelector } from 'reselect';
+import { injectIntl } from 'react-intl';
 import classes from './style.module.scss';
 
 const Home = () => {
@@ -22,7 +24,10 @@ const Home = () => {
       <Box
         sx={{
           width: '100%',
-          display: { xs: 'block', sm: 'none', position: 'fixed', bottom: 0, width: '100%', zIndex: 1000 },
+          display: { xs: 'block', sm: 'none' },
+          position: 'fixed',
+          bottom: 0,
+          zIndex: 1000,
         }}
       >
         <BottomNavigation
@@ -37,7 +42,6 @@ const Home = () => {
           <BottomNavigationAction label="Payments" icon={<PaymentIcon />} />
         </BottomNavigation>
       </Box>
-      ;
       <div className={classes.appMainContent}>
         {/* Bottom Navigation untuk Mobile */}
 
@@ -83,4 +87,8 @@ const Home = () => {
   );
 };
 
-export default Home;
+Home.propTypes = {};
+
+const mapStateToProps = createStructuredSelector({});
+
+export default injectIntl(connect(mapStateToProps)(Home));
