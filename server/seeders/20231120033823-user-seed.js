@@ -1,6 +1,9 @@
 "use strict";
 
 /** @type {import('sequelize-cli').Migration} */
+
+const { hashPassword } = require("../utils/bcryptUtil");
+
 module.exports = {
   async up(queryInterface, Sequelize) {
     /**
@@ -17,10 +20,8 @@ module.exports = {
         fullName: "Ahmad Alif Sofian",
         email: "alif12sofian@gmail.com",
         role: "pro",
-        isVerify: false,
         imagePath: "/uploads/default.jpg",
-        password:
-          "$2b$10$rEqIEgzRz2D9yZ697IkdTO0UBfExxHGt1nskAK8chjJoWNabCnG0O",
+        password: hashPassword("password123"),
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -28,10 +29,8 @@ module.exports = {
         fullName: "pro",
         email: "pro@user.com",
         role: "pro",
-        isVerify: false,
         imagePath: "/uploads/default.jpg",
-        password:
-          "$2b$10$rEqIEgzRz2D9yZ697IkdTO0UBfExxHGt1nskAK8chjJoWNabCnG0O",
+        password: hashPassword("password123"),
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -39,10 +38,8 @@ module.exports = {
         fullName: "standart",
         email: "standart@user.com",
         role: "standard",
-        isVerify: false,
         imagePath: "/uploads/default.jpg",
-        password:
-          "$2b$10$rEqIEgzRz2D9yZ697IkdTO0UBfExxHGt1nskAK8chjJoWNabCnG0O",
+        password: hashPassword("password123"),
         createdAt: new Date(),
         updatedAt: new Date(),
       },
