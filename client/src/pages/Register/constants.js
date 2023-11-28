@@ -1,0 +1,9 @@
+export const REGISTER = 'REGISTER';
+export const SEND_VERIFY_EMAIL = 'SEND_VERIFY_EMAIL';
+export const SEND_OTP = 'SEND_OTP';
+export const SET_STEP = 'SET_STEP';
+export const SET_EMAIL = 'SET_EMAIL';
+export const RESET_REGISTER_STEP = 'RESET_REGISTER_STEP';
+export const SET_TOKEN_VERIFY = 'SET_TOKEN_VERIFY';
+export const SET_EXPIRE_TIME = 'SET_EXPIRE_TIME';
+export const IS_VERIFY = 'IS_VERIFY';

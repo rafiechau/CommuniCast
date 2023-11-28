@@ -1,0 +1,68 @@
+@import '@styles/base';
+
+.mainWrap {
+  @include directionX;
+  min-height: 100vh;
+  width: 100vw;
+  max-width: 100%;
+  .registerCardWrap {
+    @include directionY;
+    justify-content: center;
+    align-items: center;
+    @include apply-at-md-size {
+      width: 60%;
+      padding: 5rem;
+    }
+    width: 100%;
+    padding: 2rem;
+    background-color: var(--color-bg-secondary);
+    .registerHeader {
+      width: 100%;
+      text-align: center;
+      font-size: larger;
+    }
+    .form {
+      .buttonSubmit {
+        width: fit-content;
+        background-color: var(--color-text);
+        color: var(--color-bg-secondary);
+        border-radius: 2.5rem;
+        padding: 0.5rem 2.5rem 0.5rem 2.5rem;
+        margin: auto;
+        margin-top: 0.75rem;
+        box-shadow: none;
+        cursor: pointer;
+        &:hover {
+          transform: scale(1.1, 1.1);
+        }
+      }
+    }
+    .showPassword {
+      @include directionX;
+      align-items: center;
+      padding-top: 0.25rem;
+      font-size: small;
+    }
+  }
+  .imgWrap {
+    display: none;
+    @include apply-at-md-size {
+      @include directionX;
+    }
+    background-color: rgba($color: grey, $alpha: 0.3);
+    height: 100vh;
+    width: 40%;
+    overflow: hidden;
+    position: relative;
+    img {
+      height: 100%;
+      object-fit: cover;
+      width: 100%;
+    }
+    .skeleton {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+    }
+  }
+}

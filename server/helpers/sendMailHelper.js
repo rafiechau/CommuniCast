@@ -112,7 +112,7 @@ exports.handleSendMailVerifyOTP = async (OTP, email) => {
       <p style="font-size: 1.1em">Hi,</p>
       <p>
         Thank you for choosing CommuniCast. Use the following
-        reset password to login
+        verify Email
       </p>
       <h2
         style="
