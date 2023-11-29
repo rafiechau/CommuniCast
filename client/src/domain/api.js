@@ -34,7 +34,23 @@ export const callAPI = async (endpoint, method, header = {}, params = {}, data =
 
 export const ping = () => callAPI(urls.ping, 'get');
 
-export const getPostsApi = () => callAPI(`${urls.posts}/`, 'GET');
+export const getPostsApi = (token) => callAPI(`${urls.posts}/`, 'GET', { Authorization: `Bearer ${token}` });
+export const getPostByIdApi = (postId) => callAPI(`${urls.posts}/${postId}`, 'GET');
+export const likePostApi = (postId, data, token) =>
+  callAPI(`${urls.posts}/like/${postId}`, 'POST', { Authorization: `Bearer ${token}` }, {}, data);
+
+export const unlikePostApi = (postId, token) =>
+  callAPI(`${urls.posts}/unlike/${postId}`, 'DELETE', { Authorization: `Bearer ${token}` });
+
+export const checkUserVoteApi = (postId, token) =>
+  callAPI(`${urls.posts}/check-vote/${postId}`, 'GET', { Authorization: `Bearer ${token}` });
+
+export const deletePostByIdApi = (postId, token) =>
+  callAPI(`${urls.posts}/delete/${postId}`, 'DELETE', { Authorization: `Bearer ${token}` });
+
+export const createPostApi = (data, token) =>
+  callAPI(`${urls.posts}/create`, 'POST', { Authorization: `Bearer ${token}` }, {}, data);
+
 export const addCommentApi = (data) => callAPI(urls.addComment, 'POST', {}, {}, data);
 export const editCommentApi = ({ formDataObj, idComment }) =>
   callAPI(`${urls.editComment}/${idComment}`, 'PUT', {}, {}, formDataObj);

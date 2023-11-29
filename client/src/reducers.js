@@ -6,6 +6,7 @@ import registerReducer, { storedKey as storedRegisterState } from '@pages/Regist
 import languageReducer from '@containers/Language/reducer';
 
 import homeReducer from '@pages/Home/reducer';
+import postDetailReducer from '@pages/Detail/reducer';
 import { mapWithPersistor } from './persistence';
 
 const storedReducers = {
@@ -17,6 +18,7 @@ const storedReducers = {
 const temporaryReducers = {
   language: languageReducer,
   home: homeReducer,
+  postDetail: postDetailReducer,
 };
 
 const createReducer = () => {

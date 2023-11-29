@@ -1,6 +1,6 @@
-/* eslint-disable react/button-has-type */
+import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import { ping } from '@containers/App/actions';
 import MessageIcon from '@mui/icons-material/Message';
@@ -8,19 +8,26 @@ import HomeIcon from '@mui/icons-material/Home';
 import PaymentIcon from '@mui/icons-material/Payment';
 import CardItem from '@components/CardItem';
 import CardDetail from '@components/CardDetail';
-import { BottomNavigation, BottomNavigationAction, Box } from '@mui/material';
+import { BottomNavigation, BottomNavigationAction, Box, CircularProgress } from '@mui/material';
 import classes from './style.module.scss';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getPostById } from './actions';
+import { createStructuredSelector } from 'reselect';
+import { selectPost } from './selectors';
+import { selectLoading } from '@containers/App/selectors';
+import { injectIntl } from 'react-intl';
 
-const Detail = () => {
+const Detail = ({ post, loading }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { postId } = useParams();
   const [value, setValue] = useState(0);
-  // useEffect(() => {
-  //   dispatch(ping());
-  // }, [dispatch]);
 
-  
+  useEffect(() => {
+    dispatch(getPostById(postId));
+  }, [dispatch, postId]);
+
+  console.log(post)
 
   return (
     <div className={classes.app}>
@@ -42,7 +49,6 @@ const Detail = () => {
           <BottomNavigationAction label="Payments" icon={<PaymentIcon />} />
         </BottomNavigation>
       </Box>
-      ;
       <div className={classes.appMainContent}>
         {/* Bottom Navigation untuk Mobile */}
 
@@ -61,14 +67,20 @@ const Detail = () => {
             <PaymentIcon />
             <h2>Payments</h2>
           </div>
-          <button className={classes.sidebarTweet}>
+          <button type="submit" className={classes.sidebarTweet}>
             <span>Tweet</span>
           </button>
         </div>
         <div className={classes.appMain}>
           <div className={classes.feed}>
             <div className={classes.post}>
-              <CardDetail />
+              {loading ? (
+                <div className={classes.loading}>
+                  <CircularProgress color="warning" />
+                </div>
+              ) : (
+                <CardDetail key={post.id} post={post} />
+              )}
             </div>
           </div>
         </div>
@@ -77,4 +89,14 @@ const Detail = () => {
   );
 };
 
-export default Detail;
+Detail.propTypes = {
+  post: PropTypes.object,
+  loading: PropTypes.bool,
+};
+
+const mapStateToProps = createStructuredSelector({
+  post: selectPost,
+  loading: selectLoading,
+});
+
+export default injectIntl(connect(mapStateToProps)(Detail));

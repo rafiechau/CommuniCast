@@ -7,6 +7,7 @@ exports.authenticationMiddleware = async (req, res, next) => {
   const token = authHeader.replace("Bearer ", "");
 
   const { id, role, fullName, error } = verifyToken(token);
+  // console.log(id)
   if (error) {
     return res.sendStatus(401);
   }
