@@ -12,14 +12,14 @@ import { injectIntl } from 'react-intl';
 // import { useNavigate } from 'react-router-dom';
 import classes from './style.module.scss';
 import { selectAllPosts } from './selectors';
-import { getAllPosts, paymentRequest } from './actions';
+import { getAllPosts, paymentRequest, updateRole } from './actions';
 
 const Home = ({ allPosts }) => {
   const dispatch = useDispatch();
   // const navigate = useNavigate();
   const [value, setValue] = useState(0);
 
-  console.log(allPosts);
+  // console.log(allPosts);
 
   useEffect(() => {
     dispatch(getAllPosts());
@@ -35,7 +35,9 @@ const Home = ({ allPosts }) => {
     return <div>Error: {allPosts.error.message}</div>;
   }
   const handlePayment = () => {
-    dispatch(paymentRequest());
+    dispatch(paymentRequest(() => {
+      dispatch(updateRole())
+    }));
   };
 
   return (

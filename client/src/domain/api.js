@@ -9,7 +9,8 @@ const urls = {
   addComment: '/users/comment',
   editComment: '/users/comment',
   deleteComment: '/users/comment',
-  payment: '/users/midtras',
+  midtras: 'users/midtras',
+  payment: 'users/payment'
 };
 
 export const callAPI = async (endpoint, method, header = {}, params = {}, data = {}) => {
@@ -39,7 +40,8 @@ export const addCommentApi = (data) => callAPI(urls.addComment, 'POST', {}, {}, 
 export const editCommentApi = ({ formDataObj, idComment }) =>
   callAPI(`${urls.editComment}/${idComment}`, 'PUT', {}, {}, formDataObj);
 export const deleteCommentApi = (id) => callAPI(`${urls.delete}/${id}`, 'DELETE');
-export const paymentApi = () => callAPI(urls.payment, 'POST');
+export const paymentApi = () => callAPI(urls.midtras, 'POST');
+export const updateRoleApi = () => callAPI(urls.payment, 'PUT');
 
 // user
 export const apiHandleLogin = (data) => callAPI(`${urls.user}/login`, 'POST', {}, {}, data);

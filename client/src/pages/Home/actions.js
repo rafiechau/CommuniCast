@@ -1,8 +1,17 @@
-import { GET_ALL_POSTS, SET_ALL_POSTS } from '@pages/Home/constants';
-import { PAYMENT_REQUEST, PAYMENT_SUCCESS } from './constants';
+import {
+  GET_ALL_POSTS,
+  SET_ALL_POSTS,
+  PAYMENT_REQUEST,
+  PAYMENT_SUCCESS,
+  UPDATE_ROLE
+} from '@pages/Home/constants';
 
 export const getAllPosts = () => ({
   type: GET_ALL_POSTS,
+});
+
+export const updateRole = () => ({
+  type: UPDATE_ROLE,
 });
 
 export const setAllPosts = (allPosts) => ({
@@ -10,9 +19,9 @@ export const setAllPosts = (allPosts) => ({
   allPosts,
 });
 
-export const paymentRequest = (payload) => ({
+export const paymentRequest = (cbSuccess) => ({
   type: PAYMENT_REQUEST,
-  payload,
+  cbSuccess,
 });
 
 export const paymentSuccess = (payload) => ({

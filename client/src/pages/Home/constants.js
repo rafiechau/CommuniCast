@@ -2,3 +2,4 @@ export const GET_ALL_POSTS = 'Home/GET_ALL_POSTS';
 export const SET_ALL_POSTS = 'Home/SET_ALL_POSTS';
 export const PAYMENT_REQUEST = 'HOME/PAYMENT_REQUEST';
 export const PAYMENT_SUCCESS = 'HOME/PAYMENT_SUCCESS';
+export const UPDATE_ROLE = 'HOME/UPDATE_ROLE';
