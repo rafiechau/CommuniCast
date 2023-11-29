@@ -1,6 +1,5 @@
 import MainLayout from '@layouts/MainLayout';
 import ForgotPassword from '@pages/ForgotPassword';
-import DetailPost from '@pages/DetailPost';
 
 import Home from '@pages/Home';
 import Login from '@pages/Login';
@@ -8,6 +7,8 @@ import NotFound from '@pages/NotFound';
 import Register from '@pages/Register';
 import Detail from '@pages/Detail';
 import ResetPassword from '@pages/ResetPassword';
+import Profile from '@pages/Profile';
+import EditProfile from '@pages/EditProfile';
 
 const routes = [
   {
@@ -40,6 +41,20 @@ const routes = [
     name: 'Reset Password',
     protected: false,
     component: ResetPassword,
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    protected: true,
+    component: Profile,
+    layout: MainLayout,
+  },
+  {
+    path: '/profile/edit',
+    name: 'Edit Profile',
+    protected: true,
+    component: EditProfile,
+    layout: MainLayout,
   },
   { path: '*', name: 'Not Found', component: NotFound, layout: MainLayout, protected: false },
   { path: '/post/:postId', name: 'Detail', component: Detail, layout: MainLayout, protected: false },

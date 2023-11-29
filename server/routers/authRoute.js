@@ -6,6 +6,10 @@ const {
   checkOtpVerifyEmail,
   forgotPassword,
   setResetPassword,
+  getProfile,
+  editProfile,
+  editPhotoProfile,
+  deleteUser,
 } = require("../controllers/authController");
 
 const {
@@ -14,6 +18,11 @@ const {
 const {
   verifySendResetMiddleware,
 } = require("../middleware/sendResetPassMiddleware");
+const {
+  authenticationMiddleware,
+} = require("../middleware/AuthenticationMiddleware");
+
+const { multerMiddleware } = require("../utils/multer");
 
 const router = Router();
 
@@ -23,5 +32,11 @@ router.post("/verifyEmail", verifyEmail);
 router.post("/checkOtpVerifyEmail", verifyEmailMiddleware, checkOtpVerifyEmail);
 router.post("/forgotPassword", forgotPassword);
 router.put("/resetPassword", verifySendResetMiddleware, setResetPassword);
+
+router.use(authenticationMiddleware);
+router.get("/profile", getProfile);
+router.put("/edit/photoProfile", multerMiddleware, editPhotoProfile);
+router.put("/edit/profile", editProfile);
+router.delete("/delete/profile", deleteUser);
 
 module.exports = router;

@@ -9,7 +9,8 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 
 import InputRHF from '@components/InputRHF';
 
-import { Skeleton } from '@mui/material';
+import { Button, Skeleton } from '@mui/material';
+import { ArrowBackIosNew } from '@mui/icons-material';
 
 import { selectLogin } from '@pages/Login/selectors';
 import { actionHandleLogin } from '@pages/Login/actions';
@@ -51,6 +52,15 @@ const Login = ({ login, intl: { formatMessage } }) => {
 
   return (
     <main className={classes.mainWrap}>
+      <div className={classes.imgWrap}>
+        {imageLoading && <Skeleton className={classes.skeleton} variant="rectangular" />}
+        <img
+          src="https://source.unsplash.com/random/?sosial-media"
+          alt=""
+          onLoad={() => setImageLoading(false)}
+          loading="lazy"
+        />
+      </div>
       <div className={classes.loginCardWrap}>
         <h2 className={classes.loginHeader}>
           <FormattedMessage id="app_header_login" />
@@ -103,15 +113,17 @@ const Login = ({ login, intl: { formatMessage } }) => {
             </p>
           </div>
         </form>
-      </div>
-      <div className={classes.imgWrap}>
-        {imageLoading && <Skeleton className={classes.skeleton} variant="rectangular" />}
-        <img
-          src="https://source.unsplash.com/random/?sosial-media"
-          alt=""
-          onLoad={() => setImageLoading(false)}
-          loading="lazy"
-        />
+        <Button
+          type="button"
+          startIcon={<ArrowBackIosNew />}
+          size="small"
+          className={classes.backButton}
+          onClick={() => {
+            navigate('/');
+          }}
+        >
+          <FormattedMessage id="app_back" />
+        </Button>
       </div>
     </main>
   );

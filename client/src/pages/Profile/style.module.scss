@@ -1,0 +1,98 @@
+@import '@styles/base';
+
+.mainWrap {
+  @include directionY;
+  padding: 2rem;
+  min-height: 90vh;
+  align-items: center;
+  box-sizing: border-box;
+  justify-content: center;
+  position: relative;
+  * {
+    box-sizing: border-box;
+  }
+  .Wrap {
+    @include directionY;
+    gap: 0.75rem;
+    h2 {
+      margin: auto;
+      font-size: 24px;
+      font-weight: 700;
+      text-align: center;
+    }
+    .imgWrap {
+      height: 7rem;
+      width: 7rem;
+      border-radius: 50%;
+      overflow: hidden;
+      margin: auto;
+      position: relative;
+      img {
+        object-fit: cover;
+        object-position: top;
+        height: 7rem;
+        width: 7rem;
+      }
+      .skeleton {
+        position: absolute;
+        height: 7rem;
+        width: 7rem;
+      }
+      .avatar {
+        height: 7rem;
+        width: 7rem;
+      }
+      .buttonEdit {
+        position: absolute;
+        display: none;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      &:hover {
+        border: 1px solid var(--color-text);
+        cursor: pointer;
+        transform: scale(1.05, 1.05);
+        opacity: 0.7;
+      }
+      &:hover > .buttonEdit {
+        display: block;
+      }
+    }
+    .buttonSubmit {
+      width: fit-content;
+      background-color: var(--color-text);
+      color: var(--color-bg-secondary);
+      border-radius: 2.5rem;
+      padding: 0.5rem 2.5rem 0.5rem 2.5rem;
+      margin: auto;
+      box-shadow: none;
+      cursor: pointer;
+      &:hover {
+        transform: scale(1.1, 1.1);
+      }
+    }
+    p {
+      margin: 0;
+      font-size: medium;
+    }
+
+    .backButton {
+      position: absolute;
+      box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.15);
+      font-size: small;
+      padding: 0.25rem 1.25rem 0.25rem 1.25rem;
+      background-color: var(--color-bg-secondary);
+      text-transform: capitalize;
+      color: var(--color-text);
+      cursor: pointer;
+      border: none;
+      margin: 1rem;
+      top: 0;
+      left: 0;
+      &:hover {
+        transform: scale(1.1, 1.1);
+      }
+    }
+  }
+}

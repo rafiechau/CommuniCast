@@ -43,6 +43,23 @@
       padding-top: 0.25rem;
       font-size: small;
     }
+    .backButton {
+      position: absolute;
+      box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.15);
+      font-size: small;
+      padding: 0.25rem 1.25rem 0.25rem 1.25rem;
+      background-color: var(--color-bg-secondary);
+      text-transform: capitalize;
+      color: var(--color-text);
+      cursor: pointer;
+      border: none;
+      margin: 1rem;
+      top: 0;
+      left: 0;
+      &:hover {
+        transform: scale(1.1, 1.1);
+      }
+    }
   }
   .imgWrap {
     display: none;

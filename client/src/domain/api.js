@@ -48,3 +48,8 @@ export const apiHandleSendVerifyEmail = (data) => callAPI(`${urls.user}/verifyEm
 export const apiHandleCheckOtpVerifyEmail = (data) => callAPI(`${urls.user}/checkOtpVerifyEmail`, 'POST', {}, {}, data);
 export const apiHandleSendForgotPassword = (data) => callAPI(`${urls.user}/sendForgotPassword`, 'POST', {}, {}, data);
 export const apiHandleResetForgotPassword = (data) => callAPI(`${urls.user}/resetPassword`, 'PUT', {}, {}, data);
+export const apiHandleGetProfile = () => callAPI(`${urls.user}/profile`, 'GET');
+export const apiHandleEditPhotoProfile = (data) =>
+  callAPI(`${urls.user}/edit/photoProfile`, 'PUT', { 'Content-Type': 'multipart/form-data' }, {}, data);
+export const apiHandleEditProfile = (data) => callAPI(`${urls.user}/edit/profile`, 'PUT', {}, {}, data);
+export const apiHandleDeleteUser = () => callAPI(`${urls.user}/delete/profile`, 'DELETE');
