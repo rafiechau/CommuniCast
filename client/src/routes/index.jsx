@@ -8,6 +8,7 @@ import Register from '@pages/Register';
 import Detail from '@pages/Detail';
 import ResetPassword from '@pages/ResetPassword';
 import Profile from '@pages/Profile';
+import EditProfile from '@pages/EditProfile';
 
 const routes = [
   {
@@ -46,6 +47,13 @@ const routes = [
     name: 'Profile',
     protected: true,
     component: Profile,
+    layout: MainLayout,
+  },
+  {
+    path: '/profile/edit',
+    name: 'Edit Profile',
+    protected: true,
+    component: EditProfile,
     layout: MainLayout,
   },
   { path: '*', name: 'Not Found', component: NotFound, layout: MainLayout, protected: false },
