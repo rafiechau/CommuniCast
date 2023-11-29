@@ -7,6 +7,7 @@ import languageReducer from '@containers/Language/reducer';
 
 import homeReducer from '@pages/Home/reducer';
 import { mapWithPersistor } from './persistence';
+import detailReducer from '@pages/Detail/reducer';
 
 const storedReducers = {
   app: { reducer: appReducer, whitelist: storedAppState },
@@ -17,6 +18,7 @@ const storedReducers = {
 const temporaryReducers = {
   language: languageReducer,
   home: homeReducer,
+  detail : detailReducer
 };
 
 const createReducer = () => {

@@ -1,26 +1,32 @@
 /* eslint-disable react/button-has-type */
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import { useParams } from 'react-router-dom';
+import { selectComment } from './selectors';
+import PropTypes from 'prop-types';
 import TwitterIcon from '@mui/icons-material/Twitter';
-import { ping } from '@containers/App/actions';
 import MessageIcon from '@mui/icons-material/Message';
 import HomeIcon from '@mui/icons-material/Home';
 import PaymentIcon from '@mui/icons-material/Payment';
-import CardItem from '@components/CardItem';
 import CardDetail from '@components/CardDetail';
+import { fetchCommentRequest } from './actions';
 import { BottomNavigation, BottomNavigationAction, Box } from '@mui/material';
 import classes from './style.module.scss';
 import { useNavigate } from 'react-router-dom';
 
-const Detail = () => {
+const Detail = ({ comment }) => {
+  const { postId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [value, setValue] = useState(0);
-  // useEffect(() => {
-  //   dispatch(ping());
-  // }, [dispatch]);
+  useEffect(() => {
+    dispatch(fetchCommentRequest(postId));
+  }, [dispatch]);
 
-  
+  const refetchComments = () => {
+    dispatch(fetchCommentRequest(postId));
+  };
 
   return (
     <div className={classes.app}>
@@ -68,7 +74,7 @@ const Detail = () => {
         <div className={classes.appMain}>
           <div className={classes.feed}>
             <div className={classes.post}>
-              <CardDetail />
+              <CardDetail comment={comment} postId={postId} refetchComments={refetchComments}/>
             </div>
           </div>
         </div>
@@ -77,4 +83,12 @@ const Detail = () => {
   );
 };
 
-export default Detail;
+Detail.propTypes = {
+  comment: PropTypes.object,
+};
+
+const mapStateToProps = createStructuredSelector({
+  comment: selectComment,
+});
+
+export default connect(mapStateToProps)(Detail);

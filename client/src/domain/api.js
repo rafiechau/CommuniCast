@@ -6,11 +6,9 @@ const urls = {
   ping: 'ping.json',
   posts: 'posts',
   user: 'user',
-  addComment: '/users/comment',
-  editComment: '/users/comment',
-  deleteComment: '/users/comment',
+  comment: 'users/comment',
   midtras: 'users/midtras',
-  payment: 'users/payment'
+  payment: 'users/payment',
 };
 
 export const callAPI = async (endpoint, method, header = {}, params = {}, data = {}) => {
@@ -36,10 +34,12 @@ export const callAPI = async (endpoint, method, header = {}, params = {}, data =
 export const ping = () => callAPI(urls.ping, 'get');
 
 export const getPostsApi = () => callAPI(`${urls.posts}/`, 'GET');
-export const addCommentApi = (data) => callAPI(urls.addComment, 'POST', {}, {}, data);
-export const editCommentApi = ({ formDataObj, idComment }) =>
-  callAPI(`${urls.editComment}/${idComment}`, 'PUT', {}, {}, formDataObj);
-export const deleteCommentApi = (id) => callAPI(`${urls.delete}/${id}`, 'DELETE');
+
+// comment and payment
+export const fetchCommentApi = (id) => callAPI(`${urls.comment}/${id}`, 'GET')
+export const addCommentApi = ({ formData, postId }) => callAPI(`${urls.comment}/${postId}`, 'POST', {}, {}, formData);
+export const editCommentApi = ({ formData, idComment }) => callAPI(`${urls.comment}/${idComment}`, 'PUT', {}, {}, formData);
+export const deleteCommentApi = (idComment) => callAPI(`${urls.comment}/${idComment}`, 'DELETE');
 export const paymentApi = () => callAPI(urls.midtras, 'POST');
 export const updateRoleApi = () => callAPI(urls.payment, 'PUT');
 

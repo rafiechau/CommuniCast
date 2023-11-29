@@ -14,10 +14,8 @@ const {
 
 const postComment = async (req, res) => {
   try {
-    // const userId = req.id
-    // const { id } = req.params
-    const userId = 1;
-    const id = 1;
+    const userId = req.id
+    const { id } = req.params
     const commentSchema = Joi.object({
       comment: Joi.string().required(),
     });
@@ -27,7 +25,7 @@ const postComment = async (req, res) => {
 
     const { comment } = value;
 
-    const createComment = await Comment.create({ comment, postId: id, userId })
+    const createComment = await Comment.create({ comment, postId: id, userId: userId })
     res.status(201).json({
       createComment,
       message: 'Success add comment'
@@ -54,10 +52,7 @@ const deleteComment = async (req, res) => {
 
 const editComment = async (req, res) => {
   try {
-    // const userId = req.id
     const { id } = req.params
-    const userId = 1;
-    // const id = 1;
     const findComment = await Comment.findOne({ where: { id } });
     if (!findComment) return res.status(400).json({ message: "error" });
 
@@ -137,8 +132,32 @@ const updateRoleStatus = async (req, res) => {
     console.log(err);
   }
 }
+
+const getCommentById = async (req, res) => {
+  try {
+    const { id } = req.params
+    const user = await User.findOne({ where: { id: req.id } })
+    const dataComment = await Comment.findAll({
+      where: { postId: id },
+      include: [
+        {
+          model: User,
+          attributes: ["fullName", "imagePath", "id"]
+        }
+      ]
+    })
+    res.status(201).json({
+      dataComment,
+      user
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 module.exports = {
   postComment,
+  getCommentById,
   deleteComment,
   editComment,
   midtrans,
