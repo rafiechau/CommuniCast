@@ -217,7 +217,7 @@ exports.editPhotoProfile = async (req, res) => {
     const response = await isExist.update({ imagePath: image });
 
     await chatStreamClient.upsertUser({
-      id: toString(response.id),
+      id: response.id.toString(),
       name: isExist.fullName,
       image: `${process.env.SERVER_HOST}${image}`,
     });
@@ -234,6 +234,11 @@ exports.editProfile = async (req, res) => {
   try {
     const { id } = req;
     const newUser = req.body;
+    if (newUser?.new_password) {
+      newUser.password = hashPassword(newUser.new_password);
+      delete newUser.new_password;
+    }
+
     const fieldtoEdit = Object.keys(newUser);
     const { error, handleRes } = validateJoi(
       res,
@@ -251,7 +256,7 @@ exports.editProfile = async (req, res) => {
     const response = await isExist.update(newUser);
 
     await chatStreamClient.upsertUser({
-      id: toString(response.id),
+      id: response.id.toString(),
       name: response.fullName,
       image: `${process.env.SERVER_HOST}${response.imagePath}`,
     });

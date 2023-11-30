@@ -35,6 +35,7 @@ export default {
   app_back: 'Back',
   app_resend: 'Resend',
   app_profile_edit: 'Edit Profile',
+  app_account_type: 'Account Type',
 
   // delete dialog
   app_delete_dialog_header: 'Are you sure to delete ? ',

@@ -6,6 +6,7 @@ import {
   ChannelHeader,
   ChatContext,
   MessageInput,
+  Thread,
   VirtualizedMessageList,
   Window,
   useChannelActionContext,
@@ -54,23 +55,28 @@ const ChannelInner = ({ isMenuOpen, setIsMenuOpen, userId }) => {
   };
 
   return (
-    <Window>
-      <div className={`${classes.headerChannelWrap} str-chat__channel-header`}>
-        {!isMenuOpen && (
-          <IconButton className={classes.hamburgerButton} onClick={() => setIsMenuOpen(true)}>
-            <ArrowBackIosNew />
-          </IconButton>
-        )}
-        <ChannelHeader />
-        {channel.data.created_by.id === userId && (
-          <IconButton onClick={() => onDelete()} sx={{ marginLeft: 'auto' }}>
-            <Delete />
-          </IconButton>
-        )}
+    <div className={classes.windowWrap}>
+      <Window>
+        <div className={`${classes.headerChannelWrap} str-chat__channel-header`}>
+          {!isMenuOpen && (
+            <IconButton className={classes.hamburgerButton} onClick={() => setIsMenuOpen(true)}>
+              <ArrowBackIosNew />
+            </IconButton>
+          )}
+          <ChannelHeader />
+          {channel.data.created_by.id === userId && (
+            <IconButton onClick={() => onDelete()} sx={{ marginLeft: 'auto' }}>
+              <Delete />
+            </IconButton>
+          )}
+        </div>
+        <VirtualizedMessageList messages={encryptMessages} />
+        <MessageInput overrideSubmitHandler={overrideSubmitHandler} />
+      </Window>
+      <div className={classes.thread}>
+        <Thread />
       </div>
-      <VirtualizedMessageList messages={encryptMessages} />
-      <MessageInput overrideSubmitHandler={overrideSubmitHandler} />
-    </Window>
+    </div>
   );
 };
 

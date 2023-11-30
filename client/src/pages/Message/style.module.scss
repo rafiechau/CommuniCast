@@ -40,8 +40,24 @@
         display: block;
         width: 70%;
       }
-      .headerChannelWrap {
-        @include directionX;
+      .windowWrap {
+        @include directionY;
+        @include apply-at-md-size {
+          @include directionX;
+        }
+        width: 100%;
+        .headerChannelWrap {
+          @include directionX;
+        }
+        .thread {
+          background-color: var(--color-text);
+          padding-top: 0.25rem;
+          max-height: 50vh;
+          @include apply-at-md-size {
+            padding-top: 0;
+            max-height: 100vh;
+          }
+        }
       }
     }
     .chatBox.open {

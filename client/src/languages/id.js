@@ -35,6 +35,7 @@ export default {
   app_back: 'Kembali',
   app_resend: 'Kirim Ulang',
   app_profile_edit: 'Ubah Profil',
+  app_account_type: 'Tipe Akun',
 
   // delete dialog
   app_delete_dialog_header: 'Kamu yakin mau hapus ini ? ',

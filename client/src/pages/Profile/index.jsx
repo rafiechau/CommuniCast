@@ -60,9 +60,15 @@ const Profile = ({ user, profile }) => {
             </Avatar>
           )}
         </div>
-        <p>FullName : {profile?.fullName}</p>
-        <p>E-mail : {profile?.email}</p>
-        <p>Account Type : {profile?.role}</p>
+        <p>
+          <FormattedMessage id="app_user_fullName" /> : {profile?.fullName}
+        </p>
+        <p>
+          <FormattedMessage id="app_user_email" /> : {profile?.email}
+        </p>
+        <p>
+          <FormattedMessage id="app_account_type" /> : {profile?.role}
+        </p>
 
         <button type="button" onClick={() => navigate('/profile/edit')} className={classes.buttonSubmit}>
           <FormattedMessage id="app_profile_edit" />
