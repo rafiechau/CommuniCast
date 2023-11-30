@@ -22,7 +22,9 @@ const {
   createTokenVerifyEmail,
 } = require("../utils/jwtUtil");
 
-const { User, Art, sequelize } = require("../models");
+const { User } = require("../models");
+
+const { chatStreamClient } = require("../utils/streamChatUtil");
 
 dotenv.config();
 
@@ -69,7 +71,7 @@ exports.register = async (req, res) => {
     const newUser = req.body;
 
     const plainPassword = CryptoJS.AES.decrypt(
-      newUserpassword,
+      newUser.password,
       process.env.CRYPTOJS_SECRET
     ).toString(CryptoJS.enc.Utf8);
 
@@ -86,6 +88,13 @@ exports.register = async (req, res) => {
       });
     }
     const response = await User.create(newUser);
+
+    await chatStreamClient.upsertUser({
+      id: response.id.toString(),
+      name: response.fullName,
+      image: `${process.env.SERVER_HOST}${response.imagePath}`,
+    });
+
     return handleSuccess(res, {
       data: response,
       message: `success register with name : ${response.fullName}`,
@@ -207,6 +216,12 @@ exports.editPhotoProfile = async (req, res) => {
     }
     const response = await isExist.update({ imagePath: image });
 
+    await chatStreamClient.upsertUser({
+      id: toString(response.id),
+      name: isExist.fullName,
+      image: `${process.env.SERVER_HOST}${image}`,
+    });
+
     return handleSuccess(res, {
       data: response,
       message: "success edit photo profile",
@@ -234,6 +249,12 @@ exports.editProfile = async (req, res) => {
       return handleRes;
     }
     const response = await isExist.update(newUser);
+
+    await chatStreamClient.upsertUser({
+      id: toString(response.id),
+      name: response.fullName,
+      image: `${process.env.SERVER_HOST}${response.imagePath}`,
+    });
 
     return handleSuccess(res, {
       data: response,
@@ -264,10 +285,17 @@ exports.deleteUser = async (req, res) => {
     if (!response) {
       return handleNotFound(res);
     }
-    if (response.imagePath !== "uploads/default.jpg") {
+    if (
+      response.imagePath != null &&
+      response.imagePath !== "uploads/default.jpg"
+    ) {
       unlink(response.imagePath, (err) => {});
     }
     await User.destroy({ where: { id: id } });
+    const userStream = await chatStreamClient.queryUsers({ id: id.toString() });
+    if (userStream.users.length > 0) {
+      await chatStreamClient.deleteUser(id.toString());
+    }
     return handleSuccess(res, { message: "deleted user" });
   } catch (error) {
     return handleServerError(res);

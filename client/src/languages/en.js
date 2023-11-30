@@ -39,4 +39,8 @@ export default {
   // delete dialog
   app_delete_dialog_header: 'Are you sure to delete ? ',
   app_delete_dialog_delete: 'Delete',
+
+  // message page
+  app_add_new_message: 'New Chat',
+  app_select_meesage_user: 'Select User!',
 };

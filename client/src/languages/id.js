@@ -39,4 +39,8 @@ export default {
   // delete dialog
   app_delete_dialog_header: 'Kamu yakin mau hapus ini ? ',
   app_delete_dialog_delete: 'Hapus',
+
+  // message page
+  app_add_new_message: 'Pesan Baru',
+  app_select_meesage_user: 'Pilih Pengguna!',
 };

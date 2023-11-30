@@ -55,7 +55,8 @@ const Profile = ({ user, profile }) => {
             </>
           ) : (
             <Avatar className={classes.avatar}>
-              {profile?.fullName?.split(' ')[0][0]} {profile?.fullName?.split(' ')[1][0]}
+              {profile?.fullName?.split(' ')[0][0]}{' '}
+              {profile?.fullName?.split(' ') > 1 && profile?.fullName?.split(' ')[1][0]}
             </Avatar>
           )}
         </div>
