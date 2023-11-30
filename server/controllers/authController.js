@@ -61,6 +61,8 @@ exports.login = async (req, res) => {
       message: "Login success",
     });
   } catch (error) {
+    console.log(process.env.CRYPTOJS_SECRET, "<<<<<<<<<<<<<<<<<<");
+    console.log(error, "<<<<<<<<<<<<<<<<<<");
     return handleServerError(res);
   }
 };

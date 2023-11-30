@@ -18,6 +18,7 @@ import { getAllPosts } from './actions';
 const Home = ({ allPosts, token }) => {
   const dispatch = useDispatch();
   const [isCreatePostDialogOpen, setIsCreatePostDialogOpen] = useState(false);
+  // console.log(allPosts);
 
   useEffect(() => {
     if (token) {

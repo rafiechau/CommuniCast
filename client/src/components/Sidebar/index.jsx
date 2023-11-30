@@ -5,7 +5,7 @@ import PaymentIcon from '@mui/icons-material/Payment';
 import AssistWalkerTwoToneIcon from '@mui/icons-material/AssistWalkerTwoTone';
 
 import { useDispatch } from 'react-redux';
-import { paymentRequest } from '@pages/Home/actions';
+import { paymentRequest, updateRole } from '@pages/Home/actions';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import classes from './style.module.scss';
@@ -18,7 +18,10 @@ export const Sidebar = ({ onOpenTweetDialog }) => {
   const isActive = (path) => location.pathname === path;
 
   const handlePayment = () => {
-    dispatch(paymentRequest());
+    dispatch(
+      paymentRequest(() => {
+        dispatch(updateRole());
+    }));
   };
 
   const navigateToHome = () => {
@@ -28,6 +31,7 @@ export const Sidebar = ({ onOpenTweetDialog }) => {
   const navigateToMyPost = () => {
     navigate('/myPost');
   };
+
   return (
     <div className={classes.sidebar}>
       <TwitterIcon className={classes.sidebarTwitterIcon} />

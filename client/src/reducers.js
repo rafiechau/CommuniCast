@@ -8,9 +8,8 @@ import languageReducer from '@containers/Language/reducer';
 import editProfileReducer from '@pages/EditProfile/reducer';
 import profileReducer from '@pages/Profile/reducer';
 import homeReducer from '@pages/Home/reducer';
-import postDetailReducer from '@pages/Detail/reducer';
-
 import myPostReducer from '@pages/MyPost/reducer';
+import detailReducer from '@pages/Detail/reducer';
 import { mapWithPersistor } from './persistence';
 
 const storedReducers = {
@@ -22,10 +21,10 @@ const storedReducers = {
 const temporaryReducers = {
   language: languageReducer,
   home: homeReducer,
-  postDetail: postDetailReducer,
   profile: profileReducer,
   editProfile: editProfileReducer,
   myPost: myPostReducer,
+  detail: detailReducer,
 };
 
 const createReducer = () => {

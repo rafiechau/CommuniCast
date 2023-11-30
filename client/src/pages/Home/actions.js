@@ -9,12 +9,18 @@ import {
   SET_USER_VOTE,
   UNLIKE_POST,
   UPDATE_POST,
+  PAYMENT_REQUEST,
+  PAYMENT_SUCCESS,
+  UPDATE_ROLE,
 } from '@pages/Home/constants';
-import { PAYMENT_REQUEST, PAYMENT_SUCCESS } from './constants';
 
 export const getAllPosts = (token) => ({
   type: GET_ALL_POSTS,
   payload: { token },
+});
+
+export const updateRole = () => ({
+  type: UPDATE_ROLE,
 });
 
 export const setAllPosts = (allPosts) => ({
@@ -22,9 +28,9 @@ export const setAllPosts = (allPosts) => ({
   allPosts,
 });
 
-export const paymentRequest = (payload) => ({
+export const paymentRequest = (cbSuccess) => ({
   type: PAYMENT_REQUEST,
-  payload,
+  cbSuccess,
 });
 
 export const paymentSuccess = (payload) => ({

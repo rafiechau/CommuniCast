@@ -8,11 +8,22 @@ import {
   getPostsApi,
   likePostApi,
   unlikePostApi,
+  paymentApi,
+  updateRoleApi,
 } from '@domain/api';
 import { getMyPost } from '@pages/MyPost/actions';
+import { setToken, setUser } from '@containers/Client/actions';
+import { jwtDecode } from 'jwt-decode';
 import { setAllPosts, paymentSuccess, updatePost, setUserVote, checkUserVote, deletePostSuccess } from './actions';
-import { CHECK_USER_VOTE, DELETE_POST, GET_ALL_POSTS, LIKE_POST, PAYMENT_REQUEST, UNLIKE_POST } from './constants';
-import { paymentApi } from '../../domain/api';
+import {
+  CHECK_USER_VOTE,
+  DELETE_POST,
+  GET_ALL_POSTS,
+  LIKE_POST,
+  PAYMENT_REQUEST,
+  UNLIKE_POST,
+  UPDATE_ROLE,
+} from './constants';
 
 export function* doGetAllPosts(action) {
   yield put(setLoading(true));
@@ -30,18 +41,37 @@ export function* doGetAllPosts(action) {
   }
 }
 
-function* handlePayment() {
+function* handleUpdateRole() {
+  try {
+    const updateRoleResult = yield call(updateRoleApi);
+    yield put(setToken(updateRoleResult.token));
+    const { role, id, fullName } = jwtDecode(updateRoleResult.token);
+    yield put(setUser({ role, id, fullName }));
+
+    if (updateRoleResult) {
+      toast.success('User role updated.');
+    } else {
+      toast.error('Error updating user role!');
+    }
+  } catch (error) {
+    console.log(error);
+    toast.error('Error updating user role!');
+  }
+}
+
+function* handlePayment({ cbSuccess }) {
   try {
     const response = yield call(paymentApi);
     yield put(paymentSuccess(response.token));
     window.snap.pay(response.token, {
       onSuccess() {
         toast.success('Successful!');
+        cbSuccess && cbSuccess();
       },
-      onPending(response) {
+      onPending() {
         toast.error('Pending Payment!');
       },
-      onError(response) {
+      onError() {
         toast.error('Error Payment!');
       },
       onClose() {
@@ -50,7 +80,7 @@ function* handlePayment() {
     });
   } catch (error) {
     console.log(error);
-    // toast.error(error.response.data.message);
+    toast.error(error.response.data.message);
   }
 }
 
@@ -109,4 +139,5 @@ export default function* homeSaga() {
   yield takeLatest(UNLIKE_POST, doUnVotePost);
   yield takeLatest(CHECK_USER_VOTE, checkUserVoteSaga);
   yield takeLatest(DELETE_POST, doDeletePost);
+  yield takeLatest(UPDATE_ROLE, handleUpdateRole);
 }

@@ -6,6 +6,7 @@ const app = express();
 const routes = require('./routers/index');
 // const { handleNotFound } = require('./helpers/handleResponseHelper');
 
+
 app.use(cors());
 app.use(express.static("public"));
 app.use(express.json());

@@ -1,17 +1,21 @@
 const express = require("express");
 const router = express.Router();
-// const authentication = require("../middlewares/authentication");
+const { authenticationMiddleware } = require("../middleware/AuthenticationMiddleware")
 const {
+  getCommentById,
   postComment,
   deleteComment,
   editComment,
-  midtrans
+  midtrans,
+  updateRoleStatus
 } = require("../controllers/commentControllers")
 
 // router.post("/comment/:id", postComment);
-router.post("/comment", postComment);
-router.put("/comment/:id", editComment)
+router.get("/comment/:id", authenticationMiddleware, getCommentById)
+router.post("/comment/:id", authenticationMiddleware, postComment);
+router.put("/comment/:id",authenticationMiddleware, editComment)
 router.delete("/comment/:id", deleteComment)
-router.post("/midtras", midtrans)
+router.post("/midtras", authenticationMiddleware, midtrans)
+router.put("/payment", authenticationMiddleware, updateRoleStatus)
 
 module.exports = router;

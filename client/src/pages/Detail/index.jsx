@@ -11,19 +11,28 @@ import { Sidebar } from '@components/Sidebar';
 import { CreatePostDialog } from '@components/CreatePostDialog';
 import { BottomBar } from '@components/BottomNavigation';
 import AddIcon from '@mui/icons-material/Add';
-import { getPostById } from './actions';
-import { selectPost } from './selectors';
+import { fetchCommentRequest, getPostById } from './actions';
+import { selectComment, selectPost } from './selectors';
 
 import classes from './style.module.scss';
 
-const Detail = ({ post, loading }) => {
+const Detail = ({ post, loading, comment }) => {
   const dispatch = useDispatch();
   const [isCreatePostDialogOpen, setIsCreatePostDialogOpen] = useState(false);
   const { postId } = useParams();
 
+
   useEffect(() => {
     dispatch(getPostById(postId));
   }, [dispatch, postId]);
+
+  useEffect(() => {
+    dispatch(fetchCommentRequest(postId));
+  }, [dispatch]);
+
+  const refetchComments = () => {
+    dispatch(fetchCommentRequest(postId));
+  };
 
   const handleOpenCreatePostDialog = () => {
     setIsCreatePostDialogOpen(true);
@@ -68,7 +77,7 @@ const Detail = ({ post, loading }) => {
                   <CircularProgress color="warning" />
                 </div>
               ) : (
-                <CardDetail key={post.id} post={post} />
+                <CardDetail comment={comment} post={post} postId={postId} refetchComments={refetchComments} />
               )}
             </div>
           </div>
@@ -81,11 +90,13 @@ const Detail = ({ post, loading }) => {
 Detail.propTypes = {
   post: PropTypes.object,
   loading: PropTypes.bool,
+  comment: PropTypes.object,
 };
 
 const mapStateToProps = createStructuredSelector({
   post: selectPost,
   loading: selectLoading,
+  comment: selectComment,
 });
 
-export default injectIntl(connect(mapStateToProps)(Detail));
+export default connect(mapStateToProps)(Detail);

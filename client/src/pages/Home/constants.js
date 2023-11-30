@@ -13,3 +13,4 @@ export const SET_USER_VOTE = 'Home/SET_USER_VOTE';
 export const DELETE_POST = 'Home/DELETE_POST';
 export const DELETE_POST_SUCCESS = 'Home/DELETE_POST_SUCCESS';
 export const RESET_DELETE_SUCCESS = 'Home/RESET_DELETE_SUCCESS';
+export const UPDATE_ROLE = 'HOME/UPDATE_ROLE';
