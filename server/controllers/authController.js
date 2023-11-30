@@ -1,4 +1,5 @@
 const CryptoJS = require("crypto-js");
+const { unlink } = require("fs");
 const dotenv = require("dotenv");
 
 const {
@@ -6,6 +7,7 @@ const {
   handleSuccess,
   handleResponse,
   handleNotFound,
+  handleClientError,
 } = require("../helpers/handleResponseHelper");
 const { validateJoi, schemaUser } = require("../helpers/joiHelper");
 const {
@@ -190,9 +192,33 @@ exports.setResetPassword = async (req, res) => {
   }
 };
 
+exports.editPhotoProfile = async (req, res) => {
+  try {
+    const { id } = req;
+    const image = req?.file?.path;
+    if (!image) {
+      return handleClientError(res, 404, "Image Not Found");
+    }
+    const isExist = await User.findOne({ where: { id: id } });
+    if (!isExist) {
+      return handleNotFound(res);
+    }
+    if (isExist.imagePath !== "uploads/default.jpg") {
+      unlink(isExist.imagePath, (err) => {});
+    }
+    const response = await isExist.update({ imagePath: image });
+
+    return handleSuccess(res, {
+      data: response,
+      message: "success edit photo profile",
+    });
+  } catch (error) {
+    return handleServerError(res);
+  }
+};
 exports.editProfile = async (req, res) => {
   try {
-    const { id, role } = req;
+    const { id } = req;
     const newUser = req.body;
     const fieldtoEdit = Object.keys(newUser);
     const { error, handleRes } = validateJoi(
@@ -205,38 +231,13 @@ exports.editProfile = async (req, res) => {
     if (!isExist) {
       return handleNotFound(res);
     }
-
     if (error) {
       return handleRes;
     }
-    if (
-      fieldtoEdit.includes("role") &&
-      newUser.role != isExist.role &&
-      role != "admin"
-    ) {
-      return handleResponse(res, 403, {
-        message: "you dont have access to change role",
-      });
-    }
-    const result = await sequelize.transaction(async (tsc) => {
-      if (newUser.role && role === "admin" && isExist.role !== newUser.role) {
-        if (newUser.role === "admin") {
-          const isExistinArt = await Art.findOne({
-            where: { userId: isExist.id },
-          });
-          if (isExistinArt) {
-            await Art.destroy({
-              where: { userId: isExist.id },
-              transaction: tsc,
-            });
-          }
-        }
-      }
-      const response = await isExist.update(newUser);
-      return response;
-    });
+    const response = await isExist.update(newUser);
+
     return handleSuccess(res, {
-      data: result,
+      data: response,
       message: "success edit profile",
     });
   } catch (error) {
@@ -253,6 +254,22 @@ exports.getProfile = async (req, res) => {
     }
     delete response.password;
     return handleSuccess(res, { data: response, message: "success" });
+  } catch (error) {
+    return handleServerError(res);
+  }
+};
+exports.deleteUser = async (req, res) => {
+  try {
+    const { id } = req;
+    const response = await User.findByPk(id);
+    if (!response) {
+      return handleNotFound(res);
+    }
+    if (response.imagePath !== "uploads/default.jpg") {
+      unlink(response.imagePath, (err) => {});
+    }
+    await User.destroy({ where: { id: id } });
+    return handleSuccess(res, { message: "deleted user" });
   } catch (error) {
     return handleServerError(res);
   }

@@ -3,35 +3,126 @@ const path = require('path');
 const { Post, User, Vote } = require('../models');
 const { handleServerError, handleSuccess, handleResponse, handleNotFound, handleCreated } = require("../helpers/handleResponseHelper");
 const { validateJoi, schemaPost } = require('../helpers/joiHelper');
+const redisClient = require('../utils/redisClient');
 
 exports.getPosts = async (req, res) => {
     try{
+        const cachedJobs = await redisClient.get(process.env.REDIS_KEY_POST);
         const { id } = req;
         const userId = id;
-        
-        const posts = await Post.findAll({
-            include: [
-                {
-                    model: User,
-                    as: 'user',
-                    attributes: ['id', 'fullName', 'imagePath', ]
-                },
-            ],
-            attributes: { exclude: ['userId'] },
-            order: [['createdAt', 'DESC']]
-        })
 
-        for (let post of posts) {
-            const hasVoted = await Vote.findOne({ where: { postId: post.id, userId } });
-            post.dataValues.hasVoted = !!hasVoted;
+        if(cachedJobs){
+            return handleSuccess(res, { message: "Data from cache", data: JSON.parse(cachedJobs)  });
+        }else{
+            const posts = await Post.findAll({
+                include: [
+                    {
+                        model: User,
+                        as: 'user',
+                        attributes: ['id', 'fullName', 'imagePath', ]
+                    },
+                ],
+                attributes: { exclude: ['userId'] },
+                order: [['createdAt', 'DESC']]
+            })
+    
+            for (let post of posts) {
+                const hasVoted = await Vote.findOne({ where: { postId: post.id, userId } });
+                post.dataValues.hasVoted = !!hasVoted;
+            }
+            await redisClient.set(process.env.REDIS_KEY_POST, JSON.stringify(posts), 'EX', 100);
+            return handleSuccess(res, { message: "success retrieved from database", data: posts  });
         }
-        
-        return handleSuccess(res, { message: "success retrieved from database", data: posts  });
     }catch(error){
         console.log(error);
         return handleServerError(res);
     }
 }
+
+// exports.getPosts = async (req, res) => {
+//     try {
+//         const page = parseInt(req.query.page) || 1; 
+//         const limit = parseInt(req.query.limit) || 5; 
+//         const offset = (page - 1) * limit; 
+
+//         const cacheKey = `${process.env.REDIS_KEY_POST}_${page}_${limit}`;
+//         const cachedJobs = await redisClient.get(cacheKey);
+//         const { id } = req;
+//         const userId = id;
+
+//         if (cachedJobs) {
+//             return handleSuccess(res, { message: "Data from cache", data: JSON.parse(cachedJobs) });
+//         } else {
+//             const { count, rows: posts } = await Post.findAndCountAll({
+//                 include: [
+//                     {
+//                         model: User,
+//                         as: 'user',
+//                         attributes: ['id', 'fullName', 'imagePath']
+//                     },
+//                 ],
+//                 attributes: { exclude: ['userId'] },
+//                 order: [['createdAt', 'DESC']],
+//                 limit,
+//                 offset
+//             });
+
+//             for (let post of posts) {
+//                 const hasVoted = await Vote.findOne({ where: { postId: post.id, userId } });
+//                 post.dataValues.hasVoted = !!hasVoted;
+//             }
+
+//             await redisClient.set(cacheKey, JSON.stringify(posts), 'EX', 100);
+
+//             return handleSuccess(res, { 
+//                 message: "success retrieved from database", 
+//                 data: posts,
+//                 total: count,
+//                 page,
+//                 lastPage: Math.ceil(count / limit)
+//             });
+//         }
+//     } catch (error) {
+//         console.log(error);
+//         return handleServerError(res);
+//     }
+// }
+
+
+
+exports.getAllPostsByUser = async (req, res) => {
+    try {
+        const { id } = req;
+        const userId = id;
+            const posts = await Post.findAll({
+                where: { userId: userId },
+                include: [
+                    {
+                        model: User,
+                        as: 'user',
+                        attributes: ['id', 'fullName', 'imagePath']
+                    },
+                ],
+                order: [['createdAt', 'DESC']]
+            });
+    
+            for (let post of posts) {
+                const hasVoted = await Vote.findOne({ where: { postId: post.id, userId } });
+                post.dataValues.hasVoted = !!hasVoted;
+            }
+    
+            if (!posts || posts.length === 0) {
+                return res.status(404).json({ message: 'No posts found for this user.' });
+            }
+            await redisClient.set(process.env.REDIS_KEY_MYPOST, JSON.stringify(posts), 'EX', 100);
+            return handleSuccess(res, { message: "success retrieved from database", data: posts  });
+        
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
 
 exports.checkUserVote = async (req, res) => {
     try {
@@ -84,18 +175,41 @@ exports.createPost = async (req, res) => {
         const image = req.file ? req.file.path : null;
         
         const postData = { ...req.body, ...(image && { image }) };
-        const { id } = req;
+        const { id, role } = req;
         const userId = id;
+
+        if (role === 'standard') {
+            const redisKey = `postRateLimit:${userId}`;
+            const lastPostTime = await redisClient.get(redisKey);
+
+            if (lastPostTime) {
+                const timeDiff = Date.now() - parseInt(lastPostTime);
+                if (timeDiff < 60000) { // 1 menit
+                    return res.status(429).json({ message: "Karna kamu belum bayar, maka kamu hanya bisa create post setiap 1 jam." });
+                }
+            }
+           
+            await redisClient.set(redisKey, Date.now().toString(), 'EX', 60); 
+        }
         const { error, handleRes } =  validateJoi(res, postData, schemaPost)
         if(error){
             return handleRes
         }
-
-        
+       
         const post = await Post.create({
             ...postData,
             userId
         })
+
+        try {
+            const cacheExists = await redisClient.exists(process.env.REDIS_KEY_POST);
+            if (cacheExists) {
+                await redisClient.del(process.env.REDIS_KEY_POST);
+                console.log('Cache cleared successfully');
+            }
+        } catch (cacheError) {
+            console.error('Error while clearing cache:', cacheError);
+        }
         
 
         return handleCreated(res, {
@@ -113,7 +227,8 @@ exports.updatePost = async (req, res) => {
         const imagePath = req?.file?.path;
         const postId = req.params.postId;
         const postData = req.body;
-        const userId = 1;
+        const { id } = req;
+        const userId = id;
 
         const { error, handleRes } = validateJoi(res, postData, schemaPost);
         if (error) {
@@ -126,18 +241,31 @@ exports.updatePost = async (req, res) => {
         }
 
         if (imagePath) {
-            postData.image = imagePath.replace(/\//g, '\\'); // Mengganti semua slash dengan backslash
-
-            const fullOldImagePath = path.join(__dirname, '.', currentPost.image); // Pastikan path ini benar
-            fs.unlink(fullOldImagePath, (err) => {
-                if (err) {
-                    console.error('Failed to delete old image:', err);
-                }
-            });
+            postData.image = imagePath.replace(/\//g, '\\'); 
+        
+            if (currentPost.image) {
+                const fullOldImagePath = path.join(__dirname, '..', currentPost.image); 
+    
+                fs.unlink(fullOldImagePath, (err) => {
+                    if (err) {
+                        console.error('Failed to delete old image:', err);
+                    }
+                });
+            }
         }
 
         await Post.update(postData, { where: { id: postId } });
-        return handleCreated(res, { message: "success" });
+        try {
+            const cacheExists = await redisClient.exists(process.env.REDIS_KEY_POST);
+            if (cacheExists) {
+                await redisClient.del(process.env.REDIS_KEY_POST);
+                console.log('Cache cleared successfully');
+            }
+        } catch (cacheError) {
+            console.error('Error while clearing cache:', cacheError);
+        }
+        
+        return handleCreated(res, { message: "success update data" });
     } catch (error) {
         console.log(error);
         return handleServerError(res);
@@ -161,6 +289,16 @@ exports.deletePost = async(req, res) => {
         }
 
         await postToDelete.destroy();
+        try {
+            const cacheExists = await redisClient.exists(process.env.REDIS_KEY_POST);
+            if (cacheExists) {
+                await redisClient.del(process.env.REDIS_KEY_POST);
+                console.log('Cache cleared successfully');
+            }
+        } catch (cacheError) {
+            console.error('Error while clearing cache:', cacheError);
+        }
+        
         return res.status(200).json({ message: 'Post successfully deleted.' });
     }catch(error){
         console.log(error);

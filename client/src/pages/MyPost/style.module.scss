@@ -59,15 +59,14 @@
                 cursor: pointer;
             }
             .sidebarTweet:hover{
-                background-color: #1991db;
+                background-color: rgb(30, 142, 227) !important;
                 cursor: pointer;
             }
         }
         .appMain{
             flex: 1;
             display: flex;
-            flex-direction: column;
-            
+            flex-direction: row;
             background-color: #e6ecf0;
             .feed{
                 flex: 1;
@@ -76,57 +75,11 @@
                     display: flex;
                     align-items: center;
                     padding: 10px;
-                    background-color: white;
-                    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-                    position: sticky;
-                    top: 0;
-                    z-index: 100;
-                    .arrowBackFeedHeader {
-                        display: flex;
-                        align-items: center;
-                        margin-right: 10px;
-                    }
-                    h2 {
-                        font-size: 1.5rem;
-                        font-weight: 800;
-                        color: #333;
-                    }
-                }
-                .detailTweet, .comment {
-                    background-color: white;
-                    margin: 20px;
-                    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-                    border-radius: 15px;
-                    .tweetHeader{
-                        display: flex;
-                        align-items: center;
-                        padding: 10px;
-                        .tweetInfo {
-                            margin-left: 10px;
-                        }
-                    }
-                    .tweetActions {
-                        display: flex;
-                        justify-content: start;
-                        margin-top: 10px;
-                      
-                        .MuiIconButton-root {
-                          margin-right: 10px;
-                        }
-                    }
-                }
-                
-                .feedHeader{
-                    position: sticky;
-                    top: 0;
                     background-color: #f8f8f8;
-                    z-index: 100;
-                    border-bottom: 1px solid #ddd;
-                    display: flex;
-                    flex-direction: row;
-                    align-items: center;
-                    padding: 10px;
                     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+                    position: sticky;
+                    top: 0;
+                    z-index: 100;
                     h2{
                         font-size: 1.5rem;
                         flex: 1;
@@ -134,23 +87,70 @@
                         color: #333;
                     }
                 }
+                .post{
+                    background-color: #f8f8f8;
+                    padding: 20px;
+                    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+                }
+                .CardItem:hover {
+                    background-color: #f4f4f4; /* Warna hover */
+                    transition: background-color 200ms ease-in-out; /* Transisi yang halus */
+                }
             }
         }
     }
 }
 
+.imagePreview {
+    @include box(100%);
+    border-radius: 0.5rem;
+    object-fit: cover;
+}
+
+.dropContainer {
+    position: relative;
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 20rem;
+    border-radius: 10px;
+    border: 2px dashed #555;
+    color: #444;
+    cursor: pointer;
+    margin-bottom: 2rem;
+    transition:
+      background 0.2s ease-in-out,
+      border 0.2s ease-in-out;
+  
+    &:hover {
+      background: linear-gradient(to bottom, white, black);
+      border-color: gray;
+      box-shadow: 0 0 10px 1px black;
+    }
+  
+    &:hover .dropTitle {
+      color: black;
+    }
+    .dropTitle {
+      color: black;
+      font-size: 1.25rem;
+      font-weight: bold;
+      text-align: center;
+      transition: color 0.2s ease-in-out;
+    }
+  }
 
 @media screen and (max-width: 576px){
     /* Mobile */
-    .appMainContent {
-        flex-direction: column;
-
-        .sidebar {
-            display: none;
-        }
-
-        .appMain {
-            flex: 1;
-        }
-    }
+    .appMainContent{
+                flex-direction: column;
+                .sidebar{
+                    display: none;
+                }
+                .appMain{
+                    flex: 1;
+                }
+            }
 }

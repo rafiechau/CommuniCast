@@ -1,7 +1,15 @@
 import { setLoading } from '@containers/App/actions';
 import toast from 'react-hot-toast';
 import { all, call, put, takeLatest } from 'redux-saga/effects';
-import { checkUserVoteApi, deletePostByIdApi, getPostsApi, likePostApi, unlikePostApi } from '@domain/api';
+import {
+  checkUserVoteApi,
+  deletePostByIdApi,
+  getMyPostsApi,
+  getPostsApi,
+  likePostApi,
+  unlikePostApi,
+} from '@domain/api';
+import { getMyPost } from '@pages/MyPost/actions';
 import { setAllPosts, paymentSuccess, updatePost, setUserVote, checkUserVote, deletePostSuccess } from './actions';
 import { CHECK_USER_VOTE, DELETE_POST, GET_ALL_POSTS, LIKE_POST, PAYMENT_REQUEST, UNLIKE_POST } from './constants';
 import { paymentApi } from '../../domain/api';
@@ -15,7 +23,7 @@ export function* doGetAllPosts(action) {
 
     yield all(response.data.map((post) => put(checkUserVote(post.id, token))));
   } catch (error) {
-    console.log(error)
+    console.log(error);
     toast.error('Error fetching posts');
   } finally {
     yield put(setLoading(false));
@@ -85,13 +93,11 @@ function* checkUserVoteSaga(action) {
 export function* doDeletePost(action) {
   try {
     const { postId, token } = action.payload;
-    console.log(postId);
-    console.log(token);
     const response = yield call(deletePostByIdApi, postId, token);
     yield put(deletePostSuccess(action.payload.postId));
+    yield put(getMyPost(getMyPostsApi));
     toast.success(response.message);
   } catch (error) {
-    console.log(error);
     toast.error(error.response.data.message);
   }
 }

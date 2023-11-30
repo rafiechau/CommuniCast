@@ -29,7 +29,7 @@ import { selectToken } from '@containers/Client/selectors';
 import { checkUserVote, deletePostById, likePost, unLikePost } from '@pages/Home/actions';
 import { selectUserVotes } from '@pages/Home/selectors';
 
-const CardItem = ({ post, token, userHasVoted }) => {
+const CardItem = ({ post, token, userHasVoted, onEdit, isEditable = false }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -50,8 +50,6 @@ const CardItem = ({ post, token, userHasVoted }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  const handleUpdate = () => {};
 
   const handleCloseConfirmDialog = () => {
     setOpenConfirmDialog(false);
@@ -117,10 +115,12 @@ const CardItem = ({ post, token, userHasVoted }) => {
       >
         <MoreVertIcon />
       </IconButton>
-      <Menu id="menu-post" anchorEl={anchorEl} keepMounted open={open} onClose={handleClose}>
-        <MenuItem onClick={handleUpdate}>Update Post</MenuItem>
-        <MenuItem onClick={handleDelete}>Delete Post</MenuItem>
-      </Menu>
+      {isEditable && (
+        <Menu id="menu-post" anchorEl={anchorEl} keepMounted open={open} onClose={handleClose}>
+          <MenuItem onClick={() => onEdit()}>Update Post</MenuItem>
+          <MenuItem onClick={handleDelete}>Delete Post</MenuItem>
+        </Menu>
+      )}
 
       <Box
         sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px' }}
@@ -172,6 +172,7 @@ const CardItem = ({ post, token, userHasVoted }) => {
 CardItem.propTypes = {
   post: PropTypes.object.isRequired,
   token: PropTypes.string,
+  isEditable: PropTypes.bool,
 };
 
 const mapStateToProps = createStructuredSelector({

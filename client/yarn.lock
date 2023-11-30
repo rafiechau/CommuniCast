@@ -6065,6 +6065,13 @@ react-image-gallery@1.2.12:
   resolved "https://registry.npmjs.org/react-image-gallery/-/react-image-gallery-1.2.12.tgz"
   integrity sha512-JIh85lh0Av/yewseGJb/ycg00Y/weQiZEC/BQueC2Z5jnYILGB6mkxnrOevNhsM2NdZJpvcDekCluhy6uzEoTA==
 
+react-infinite-scroll-component@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.npmjs.org/react-infinite-scroll-component/-/react-infinite-scroll-component-6.1.0.tgz"
+  integrity sha512-SQu5nCqy8DxQWpnUVLx7V7b7LcA37aM7tvoWjTLZp1dk6EJibM5/4EJKzOnl07/BsM1Y40sKLuqjCwwH/xV0TQ==
+  dependencies:
+    throttle-debounce "^2.1.0"
+
 react-intl@^6.4.4:
   version "6.4.4"
   resolved "https://registry.npmjs.org/react-intl/-/react-intl-6.4.4.tgz"
@@ -6230,7 +6237,7 @@ react-virtuoso@^2.10.2, react-virtuoso@^2.16.5:
     "@virtuoso.dev/react-urx" "^0.2.12"
     "@virtuoso.dev/urx" "^0.2.12"
 
-"react@^0.13.0 || ^0.14.0 || >=15", "react@^0.14.0 || ^15.0.0-0 || ^16.0.0 || ^17.0.0", "react@^16 || ^17 || ^18", "react@^16.0.0 || ^17.0.0 || ^18.0.0", "react@^16.6.0 || 17 || 18", "react@^16.8 || ^17.0 || ^18.0", "react@^16.8.0 || ^17 || ^18", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^17.0.0 || ^18.0.0", react@^18.0.0, "react@^18.0.0 || ^17.0.0 || ^16.8.0", react@^18.2.0, "react@>= 0.14.0", "react@>= 15", "react@>= 16.8 || 18.0.0", react@>=16, "react@>=16 || >=17 || >= 18", react@>=16.3.x, react@>=16.6.0, react@>=16.8, react@>=16.8.0:
+"react@^0.13.0 || ^0.14.0 || >=15", "react@^0.14.0 || ^15.0.0-0 || ^16.0.0 || ^17.0.0", "react@^16 || ^17 || ^18", "react@^16.0.0 || ^17.0.0 || ^18.0.0", "react@^16.6.0 || 17 || 18", "react@^16.8 || ^17.0 || ^18.0", "react@^16.8.0 || ^17 || ^18", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^17.0.0 || ^18.0.0", react@^18.0.0, "react@^18.0.0 || ^17.0.0 || ^16.8.0", react@^18.2.0, "react@>= 0.14.0", "react@>= 15", "react@>= 16.8 || 18.0.0", react@>=16, "react@>=16 || >=17 || >= 18", react@>=16.0.0, react@>=16.3.x, react@>=16.6.0, react@>=16.8, react@>=16.8.0:
   version "18.2.0"
   resolved "https://registry.npmjs.org/react/-/react-18.2.0.tgz"
   integrity sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==
@@ -6855,6 +6862,11 @@ textarea-caret@^3.1.0:
   version "3.1.0"
   resolved "https://registry.npmjs.org/textarea-caret/-/textarea-caret-3.1.0.tgz"
   integrity sha512-cXAvzO9pP5CGa6NKx0WYHl+8CHKZs8byMkt3PCJBCmq2a34YA9pO1NrQET5pzeqnBjBdToF5No4rrmkDUgQC2Q==
+
+throttle-debounce@^2.1.0:
+  version "2.3.0"
+  resolved "https://registry.npmjs.org/throttle-debounce/-/throttle-debounce-2.3.0.tgz"
+  integrity sha512-H7oLPV0P7+jgvrk+6mwwwBDmxTaxnu9HMXmloNLXwnNO0ZxZ31Orah2n8lU1eMPvsaowP2CX+USCgyovXfdOFQ==
 
 titleize@^3.0.0:
   version "3.0.0"

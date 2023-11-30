@@ -35,6 +35,7 @@ export const callAPI = async (endpoint, method, header = {}, params = {}, data =
 export const ping = () => callAPI(urls.ping, 'get');
 
 export const getPostsApi = (token) => callAPI(`${urls.posts}/`, 'GET', { Authorization: `Bearer ${token}` });
+// export const getPaginatedPostsApi = (page, limit) => callAPI(`${urls.posts}?page=${page}&limit=${limit}`, 'GET');
 export const getPostByIdApi = (postId) => callAPI(`${urls.posts}/${postId}`, 'GET');
 export const likePostApi = (postId, data, token) =>
   callAPI(`${urls.posts}/like/${postId}`, 'POST', { Authorization: `Bearer ${token}` }, {}, data);
@@ -51,6 +52,11 @@ export const deletePostByIdApi = (postId, token) =>
 export const createPostApi = (data, token) =>
   callAPI(`${urls.posts}/create`, 'POST', { Authorization: `Bearer ${token}` }, {}, data);
 
+export const getMyPostsApi = (token) => callAPI(`${urls.posts}/my-post`, 'GET', { Authorization: `Bearer ${token}` });
+
+export const updatePostByIdApi = (postId, data, token) =>
+  callAPI(`${urls.posts}/update/${postId}`, 'PUT', { Authorization: `Bearer ${token}` }, {}, data);
+
 export const addCommentApi = (data) => callAPI(urls.addComment, 'POST', {}, {}, data);
 export const editCommentApi = ({ formDataObj, idComment }) =>
   callAPI(`${urls.editComment}/${idComment}`, 'PUT', {}, {}, formDataObj);
@@ -64,3 +70,8 @@ export const apiHandleSendVerifyEmail = (data) => callAPI(`${urls.user}/verifyEm
 export const apiHandleCheckOtpVerifyEmail = (data) => callAPI(`${urls.user}/checkOtpVerifyEmail`, 'POST', {}, {}, data);
 export const apiHandleSendForgotPassword = (data) => callAPI(`${urls.user}/sendForgotPassword`, 'POST', {}, {}, data);
 export const apiHandleResetForgotPassword = (data) => callAPI(`${urls.user}/resetPassword`, 'PUT', {}, {}, data);
+export const apiHandleGetProfile = () => callAPI(`${urls.user}/profile`, 'GET');
+export const apiHandleEditPhotoProfile = (data) =>
+  callAPI(`${urls.user}/edit/photoProfile`, 'PUT', { 'Content-Type': 'multipart/form-data' }, {}, data);
+export const apiHandleEditProfile = (data) => callAPI(`${urls.user}/edit/profile`, 'PUT', {}, {}, data);
+export const apiHandleDeleteUser = () => callAPI(`${urls.user}/delete/profile`, 'DELETE');

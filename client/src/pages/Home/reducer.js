@@ -14,7 +14,6 @@ const homeReducer = (state = initialState, action) =>
   produce(state, (draft) => {
     switch (action.type) {
       case SET_ALL_POSTS:
-        // console.log(action.allPosts.data)
         draft.allPosts = action.allPosts;
         action.allPosts.data.forEach((post) => {
           draft.userVotes[post.id] = post.hasVoted;

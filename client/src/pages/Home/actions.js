@@ -14,7 +14,7 @@ import { PAYMENT_REQUEST, PAYMENT_SUCCESS } from './constants';
 
 export const getAllPosts = (token) => ({
   type: GET_ALL_POSTS,
-  payload: { token }
+  payload: { token },
 });
 
 export const setAllPosts = (allPosts) => ({

@@ -8,6 +8,10 @@ import registerSaga from '@pages/Register/saga';
 import forgotPasswordSaga from '@pages/ForgotPassword/saga';
 import resetPasswordSaga from '@pages/ResetPassword/saga';
 import createPostSaga from '@pages/CreatePost/saga';
+import profileSaga from '@pages/Profile/saga';
+import EditProfileSaga from '@pages/EditProfile/saga';
+import myPostSaga from '@pages/MyPost/saga';
+import editPostSaga from '@pages/EditPost/saga';
 
 export default function* rootSaga() {
   yield all([
@@ -19,5 +23,9 @@ export default function* rootSaga() {
     addCommentSaga(),
     homeSaga(),
     createPostSaga(),
+    profileSaga(),
+    EditProfileSaga(),
+    myPostSaga(),
+    editPostSaga(),
   ]);
 }

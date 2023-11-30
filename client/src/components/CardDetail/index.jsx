@@ -15,7 +15,7 @@ const CommentCard = ({ commenter, text }) => {
     // Implementasi logika untuk menyimpan perubahan teks di sini
     setIsEditing(false);
   };
-  
+
   return (
     <Card sx={{ marginBottom: '10px' }}>
       <CardContent sx={{ backgroundColor: 'grey' }}>
@@ -96,9 +96,7 @@ const CardDetail = ({post}) => {
         <Typography sx={{ fontWeight: '700' }} gutterBottom variant="h5" component="div">
           {post?.title}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {post?.des}
-        </Typography>
+        <div dangerouslySetInnerHTML={{ __html: post?.des }} />
         <Typography gutterBottom variant="h6" component="div" sx={{ marginTop: '3px' }}>
           Comment
           <Button onClick={handleToggleComments}>{showComments ? 'Hide Comments' : 'Show Comments'}</Button>
