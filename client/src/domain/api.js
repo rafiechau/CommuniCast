@@ -62,7 +62,8 @@ export const updatePostByIdApi = (postId, data, token) =>
 // comment and payment
 export const fetchCommentApi = (id) => callAPI(`${urls.comment}/${id}`, 'GET')
 export const addCommentApi = ({ formData, postId }) => callAPI(`${urls.comment}/${postId}`, 'POST', {}, {}, formData);
-export const editCommentApi = ({ formData, idComment }) => callAPI(`${urls.comment}/${idComment}`, 'PUT', {}, {}, formData);
+export const editCommentApi = ({ formData, idComment }) =>
+  callAPI(`${urls.comment}/${idComment}`, 'PUT', {}, {}, formData);
 export const deleteCommentApi = (idComment) => callAPI(`${urls.comment}/${idComment}`, 'DELETE');
 export const paymentApi = () => callAPI(urls.midtras, 'POST');
 export const updateRoleApi = () => callAPI(urls.payment, 'PUT');

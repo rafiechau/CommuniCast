@@ -38,6 +38,8 @@ export default {
   app_profile_edit: 'Ubah Profil',
   app_account_type: 'Tipe Akun',
   app_user: 'Pengguna',
+  app_edit_post: 'Simpan Perubahan',
+  app_header_edit_post: 'Ubah Post',
 
   // delete dialog
   app_delete_dialog_header: 'Kamu yakin mau hapus ini ? ',
