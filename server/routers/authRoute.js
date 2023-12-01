@@ -10,6 +10,7 @@ const {
   editProfile,
   editPhotoProfile,
   deleteUser,
+  logout,
 } = require("../controllers/authController");
 
 const {
@@ -34,6 +35,7 @@ router.post("/forgotPassword", forgotPassword);
 router.put("/resetPassword", verifySendResetMiddleware, setResetPassword);
 
 router.use(authenticationMiddleware);
+router.get("/logout", logout);
 router.get("/profile", getProfile);
 router.put("/edit/photoProfile", multerMiddleware, editPhotoProfile);
 router.put("/edit/profile", editProfile);

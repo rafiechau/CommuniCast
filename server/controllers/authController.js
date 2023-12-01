@@ -21,15 +21,28 @@ const {
   createTokenForForgetPassword,
   createTokenVerifyEmail,
 } = require("../utils/jwtUtil");
+const redisClient = require("../utils/redisClient");
 
-const { User, Art, sequelize } = require("../models");
+const { User } = require("../models");
+
+const { chatStreamClient } = require("../utils/streamChatUtil");
 
 dotenv.config();
 
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-
+    const maxAttempts = process.env.MAX_ATTEMPTS_LOGIN;
+    const attemptsExpire = eval(process.env.ATTEMPTS_EXPIRE);
+    redisClient.expire(`loginAttempts:${email}`, attemptsExpire);
+    const attempts = await redisClient.incr(`loginAttempts:${email}`);
+    if (attempts > maxAttempts) {
+      return handleClientError(
+        res,
+        400,
+        `hit maximum Login Attempt, try again in ${attemptsExpire} seconds`
+      );
+    }
     const plainPassword = CryptoJS.AES.decrypt(
       password,
       process.env.CRYPTOJS_SECRET
@@ -55,6 +68,7 @@ exports.login = async (req, res) => {
     if (!token) {
       throw new Error("Token Created failed");
     }
+    redisClient.setex(dataUser.id.toString(), 24 * 60 * 60, token);
     return handleSuccess(res, {
       token: token,
       message: "Login success",
@@ -69,7 +83,7 @@ exports.register = async (req, res) => {
     const newUser = req.body;
 
     const plainPassword = CryptoJS.AES.decrypt(
-      newUserpassword,
+      newUser.password,
       process.env.CRYPTOJS_SECRET
     ).toString(CryptoJS.enc.Utf8);
 
@@ -86,6 +100,13 @@ exports.register = async (req, res) => {
       });
     }
     const response = await User.create(newUser);
+
+    await chatStreamClient.upsertUser({
+      id: response.id.toString(),
+      name: response.fullName,
+      image: `${process.env.SERVER_HOST}${response.imagePath}`,
+    });
+
     return handleSuccess(res, {
       data: response,
       message: `success register with name : ${response.fullName}`,
@@ -207,6 +228,12 @@ exports.editPhotoProfile = async (req, res) => {
     }
     const response = await isExist.update({ imagePath: image });
 
+    await chatStreamClient.upsertUser({
+      id: response.id.toString(),
+      name: isExist.fullName,
+      image: `${process.env.SERVER_HOST}${image}`,
+    });
+
     return handleSuccess(res, {
       data: response,
       message: "success edit photo profile",
@@ -219,6 +246,15 @@ exports.editProfile = async (req, res) => {
   try {
     const { id } = req;
     const newUser = req.body;
+    if (newUser?.new_password) {
+      const plainPassword = CryptoJS.AES.decrypt(
+        newUser.new_password,
+        process.env.CRYPTOJS_SECRET
+      ).toString(CryptoJS.enc.Utf8);
+      newUser.password = hashPassword(plainPassword);
+      delete newUser.new_password;
+    }
+
     const fieldtoEdit = Object.keys(newUser);
     const { error, handleRes } = validateJoi(
       res,
@@ -234,6 +270,12 @@ exports.editProfile = async (req, res) => {
       return handleRes;
     }
     const response = await isExist.update(newUser);
+
+    await chatStreamClient.upsertUser({
+      id: response.id.toString(),
+      name: response.fullName,
+      image: `${process.env.SERVER_HOST}${response.imagePath}`,
+    });
 
     return handleSuccess(res, {
       data: response,
@@ -264,11 +306,28 @@ exports.deleteUser = async (req, res) => {
     if (!response) {
       return handleNotFound(res);
     }
-    if (response.imagePath !== "uploads/default.jpg") {
+    if (
+      response.imagePath != null &&
+      response.imagePath !== "uploads/default.jpg"
+    ) {
       unlink(response.imagePath, (err) => {});
     }
     await User.destroy({ where: { id: id } });
+    const userStream = await chatStreamClient.queryUsers({ id: id.toString() });
+    if (userStream.users.length > 0) {
+      await chatStreamClient.deleteUser(id.toString());
+    }
     return handleSuccess(res, { message: "deleted user" });
+  } catch (error) {
+    return handleServerError(res);
+  }
+};
+exports.logout = async (req, res) => {
+  try {
+    const { id } = req;
+    // delete token
+    redisClient.del(id.toString());
+    return handleSuccess(res, { message: "logout" });
   } catch (error) {
     return handleServerError(res);
   }

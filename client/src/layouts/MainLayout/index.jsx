@@ -6,10 +6,11 @@ import { createStructuredSelector } from 'reselect';
 import { selectLocale, selectTheme } from '@containers/App/selectors';
 
 import Navbar from '@components/Navbar';
+import { selectLogin } from '@pages/Login/selectors';
 
-const MainLayout = ({ children, locale, theme, intl: { formatMessage } }) => (
+const MainLayout = ({ children, login, locale, theme, intl: { formatMessage } }) => (
   <div>
-    <Navbar title={formatMessage({ id: 'app_title_header' })} locale={locale} theme={theme} />
+    <Navbar title={formatMessage({ id: 'app_title_header' })} locale={locale} theme={theme} login={login} />
     {children}
   </div>
 );
@@ -17,6 +18,7 @@ const MainLayout = ({ children, locale, theme, intl: { formatMessage } }) => (
 const mapStateToProps = createStructuredSelector({
   locale: selectLocale,
   theme: selectTheme,
+  login: selectLogin,
 });
 
 MainLayout.propTypes = {
@@ -24,6 +26,7 @@ MainLayout.propTypes = {
   locale: PropTypes.string,
   theme: PropTypes.string,
   intl: PropTypes.object,
+  login: PropTypes.bool,
 };
 
 export default injectIntl(connect(mapStateToProps)(MainLayout));

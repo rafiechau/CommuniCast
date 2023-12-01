@@ -6,6 +6,7 @@ const urls = {
   ping: 'ping.json',
   posts: 'posts',
   user: 'user',
+  chat: 'chat',
   addComment: '/users/comment',
   editComment: '/users/comment',
   deleteComment: '/users/comment',
@@ -43,13 +44,19 @@ export const paymentApi = () => callAPI(urls.payment, 'POST');
 
 // user
 export const apiHandleLogin = (data) => callAPI(`${urls.user}/login`, 'POST', {}, {}, data);
+export const apiHandleLogout = () => callAPI(`${urls.user}/logout`, 'GET');
 export const apiHandleRegister = (data) => callAPI(`${urls.user}/register`, 'POST', {}, {}, data);
 export const apiHandleSendVerifyEmail = (data) => callAPI(`${urls.user}/verifyEmail`, 'POST', {}, {}, data);
 export const apiHandleCheckOtpVerifyEmail = (data) => callAPI(`${urls.user}/checkOtpVerifyEmail`, 'POST', {}, {}, data);
-export const apiHandleSendForgotPassword = (data) => callAPI(`${urls.user}/sendForgotPassword`, 'POST', {}, {}, data);
+export const apiHandleSendForgotPassword = (data) => callAPI(`${urls.user}/forgotPassword`, 'POST', {}, {}, data);
 export const apiHandleResetForgotPassword = (data) => callAPI(`${urls.user}/resetPassword`, 'PUT', {}, {}, data);
 export const apiHandleGetProfile = () => callAPI(`${urls.user}/profile`, 'GET');
 export const apiHandleEditPhotoProfile = (data) =>
   callAPI(`${urls.user}/edit/photoProfile`, 'PUT', { 'Content-Type': 'multipart/form-data' }, {}, data);
 export const apiHandleEditProfile = (data) => callAPI(`${urls.user}/edit/profile`, 'PUT', {}, {}, data);
 export const apiHandleDeleteUser = () => callAPI(`${urls.user}/delete/profile`, 'DELETE');
+
+// message stream.io
+export const apiHandleGetTokenStream = () => callAPI(`${urls.chat}/token`, 'POST');
+export const apiHandleGetUsersAvailable = () => callAPI(`${urls.chat}/userAvailable`, 'GET');
+export const apiHandleAddChannel = (data) => callAPI(`${urls.chat}/createChannel`, 'POST', {}, {}, data);

@@ -9,6 +9,7 @@ import forgotPasswordSaga from '@pages/ForgotPassword/saga';
 import resetPasswordSaga from '@pages/ResetPassword/saga';
 import profileSaga from '@pages/Profile/saga';
 import EditProfileSaga from '@pages/EditProfile/saga';
+import MessageSaga from '@pages/Message/saga';
 
 export default function* rootSaga() {
   yield all([
@@ -21,5 +22,6 @@ export default function* rootSaga() {
     homeSaga(),
     profileSaga(),
     EditProfileSaga(),
+    MessageSaga(),
   ]);
 }

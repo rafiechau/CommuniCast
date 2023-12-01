@@ -9,6 +9,7 @@ import Detail from '@pages/Detail';
 import ResetPassword from '@pages/ResetPassword';
 import Profile from '@pages/Profile';
 import EditProfile from '@pages/EditProfile';
+import Message from '@pages/Message';
 
 const routes = [
   {
@@ -54,6 +55,13 @@ const routes = [
     name: 'Edit Profile',
     protected: true,
     component: EditProfile,
+    layout: MainLayout,
+  },
+  {
+    path: '/message',
+    name: 'chat',
+    protected: true,
+    component: Message,
     layout: MainLayout,
   },
   { path: '*', name: 'Not Found', component: NotFound, layout: MainLayout, protected: false },
