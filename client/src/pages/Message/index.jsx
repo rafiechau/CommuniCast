@@ -14,6 +14,7 @@ import config from '@config/index';
 
 import ChannelInner from '@components/ChannelInner';
 import NewMessageDialog from '@components/NewMessageDialog';
+import CustomChannelPreview from '@components/CustomChannelPreview';
 
 import { Add } from '@mui/icons-material';
 import { Button } from '@mui/material';
@@ -74,6 +75,7 @@ const Message = ({ theme, profile, tokenChat }) => {
                   <ChannelList
                     filters={{ members: { $in: [JSON.stringify(profile?.id)] } }}
                     sort={{ last_message_at: -1 }}
+                    Preview={CustomChannelPreview}
                   />
                 </div>
               </div>
