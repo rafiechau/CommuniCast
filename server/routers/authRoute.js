@@ -28,7 +28,6 @@ const { multerMiddleware } = require("../utils/multer");
 const router = Router();
 
 router.post("/login", login);
-router.post("/logout", logout);
 router.post("/register", register);
 router.post("/verifyEmail", verifyEmail);
 router.post("/checkOtpVerifyEmail", verifyEmailMiddleware, checkOtpVerifyEmail);
@@ -36,6 +35,7 @@ router.post("/forgotPassword", forgotPassword);
 router.put("/resetPassword", verifySendResetMiddleware, setResetPassword);
 
 router.use(authenticationMiddleware);
+router.get("/logout", logout);
 router.get("/profile", getProfile);
 router.put("/edit/photoProfile", multerMiddleware, editPhotoProfile);
 router.put("/edit/profile", editProfile);

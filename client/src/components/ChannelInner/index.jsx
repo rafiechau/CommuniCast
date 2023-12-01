@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import CryptoJS from 'crypto-js';
 import toast from 'react-hot-toast';
 import { useContext, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import {
   ChannelHeader,
   ChatContext,
@@ -16,9 +17,12 @@ import {
 import { ArrowBackIosNew, Delete } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
 
+import { actionResetUsersAvailable } from '@pages/Message/actions';
+
 import classes from '@pages/Message/style.module.scss';
 
 const ChannelInner = ({ isMenuOpen, setIsMenuOpen, userId }) => {
+  const dispatch = useDispatch();
   const { sendMessage } = useChannelActionContext();
   const { messages } = useChannelStateContext();
   const { channel } = useContext(ChatContext);
@@ -49,6 +53,7 @@ const ChannelInner = ({ isMenuOpen, setIsMenuOpen, userId }) => {
     try {
       await channel.delete();
       setIsMenuOpen(true);
+      dispatch(actionResetUsersAvailable());
     } catch (error) {
       toast.error('Failed to Delete');
     }

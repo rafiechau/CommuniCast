@@ -63,6 +63,9 @@
     .chatBox.open {
       display: block;
       width: 100%;
+      @include apply-at-md-size {
+        width: 70%;
+      }
     }
     .hamburgerButton {
       @include apply-at-md-size {

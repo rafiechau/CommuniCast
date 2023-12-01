@@ -1,6 +1,6 @@
 export default {
   app_greeting: 'Hai dari Web!',
-  app_title_header: 'Bootcamp',
+  app_title_header: 'CommuniCast',
   app_not_found: 'Halaman tidak ditemukan',
   app_lang_id: 'Bahasa Indonesia',
   app_lang_en: 'Bahasa Inggris',
@@ -13,6 +13,7 @@ export default {
   // login and register
   app_profile: 'Profil',
   app_header_login: 'Masuk',
+  app_header_logout: 'Keluar',
   app_header_register: 'Daftar',
   app_user_fullName: 'Nama Lengkap',
   app_user_fullName_require_message: 'Nama Lengkap dibutuhkan',
@@ -36,6 +37,7 @@ export default {
   app_resend: 'Kirim Ulang',
   app_profile_edit: 'Ubah Profil',
   app_account_type: 'Tipe Akun',
+  app_user: 'Pengguna',
 
   // delete dialog
   app_delete_dialog_header: 'Kamu yakin mau hapus ini ? ',

@@ -48,18 +48,25 @@ change .env.example to .env
 ```
 NODE_ENV=development
 APP_PORT=5000
+
+MAX_ATTEMPTS_LOGIN=3
+ATTEMPTS_EXPIRE=2*60
+
 SECRET_KEY=rahasia
-SECRET_KEY_REFRESH=2rahasia
 SECRET_KEY_VERIFY_EMAIL=rasda
 SECRET_KEY_FOR_FORGET_PASSWORD=sangatrahasia
+CRYPTOJS_SECRET=rahasiabanget
+
+STREAM_KEY=stream chat api key from etStream.io
+STREAM_SECRET=stream chat secret key from etStream.io
+
 MY_EMAIL=email
 EMAIL_PASSWORD="password"
+
 CLIENT_URL=http://localhost:3000/
 CLIENT_HOST=http://localhost:3000
 SERVER_HOST=http://localhost:5000/
-CRYPTOJS_SECRET=rahasiabanget
-STREAM_KEY=stream chat api key from etStream.io
-STREAM_SECRET=stream chat secret key from etStream.io
+
 ```
 
 ---
@@ -118,6 +125,13 @@ _Response (200)_
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6ImhyIiwiaWF0IjoxNzAwMjA0ODcxfQ.3MSK5zuJFsfcTyKd1ZJPfpRt2Wm9GP1vIx25w6XfcdQ",
     "message": "Login success"
 }
+```
+
+_response(400,bad request)_
+
+```
+`hit maximum Login Attempt, try again in ${attemptsExpire} seconds`
+
 ```
 
 _response(400,bad request)_
@@ -482,6 +496,30 @@ _Response (404, not found)_
 ```
  {message:"Data Not Found"}
 
+```
+
+---
+
+### GET /api/user/logout
+
+> user Logout
+
+_Request Header_
+
+```
+Bearer Token
+```
+
+_Request Body_
+
+```
+not needed
+```
+
+_Response (200)_
+
+```
+{ message: "logout" }
 ```
 
 ---
