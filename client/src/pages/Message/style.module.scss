@@ -6,7 +6,7 @@
   overflow: hidden;
   .chatWrap {
     @include directionX;
-    height: calc(100vh - 3.5rem);
+    height: calc(100vh - 4rem);
     .channelListWrap {
       @include directionY;
       width: 0;
@@ -48,9 +48,10 @@
         width: 100%;
         .headerChannelWrap {
           @include directionX;
+          margin: 0 0 0.5rem 0;
         }
         .thread {
-          background-color: var(--color-text);
+          background-color: var(-- color-text);
           padding-top: 0.25rem;
           max-height: 50vh;
           @include apply-at-md-size {

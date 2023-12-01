@@ -30,13 +30,20 @@ const ChannelInner = ({ isMenuOpen, setIsMenuOpen, userId }) => {
 
   useEffect(() => {
     if (messages.length > 0) {
-      const n = messages.length - 1;
-      const temp = messages[n].text;
-      messages[n].text = CryptoJS.AES.decrypt(temp, import.meta.env.VITE_CRYPTOJS_SECRET).toString(CryptoJS.enc.Utf8);
-      if (messages[n].text === '') {
-        messages[n].text = temp;
-      }
-      messages[n].html = messages[n].html.replace(temp, messages[n].text);
+      messages.forEach((message) => {
+        const temp = message.text;
+        message.text = CryptoJS.AES.decrypt(temp, import.meta.env.VITE_CRYPTOJS_SECRET).toString(CryptoJS.enc.Utf8);
+        if (message.quoted_message) {
+          message.quoted_message.text = CryptoJS.AES.decrypt(
+            message.quoted_message.text,
+            import.meta.env.VITE_CRYPTOJS_SECRET
+          ).toString(CryptoJS.enc.Utf8);
+        }
+        if (message.text === '' || message.text === 'This message was deleted...') {
+          message.text = temp;
+        }
+        message.html = message.html.replace(temp, message.text);
+      });
       setEncryptMessage(messages);
     } else {
       setEncryptMessage(messages);
@@ -45,7 +52,9 @@ const ChannelInner = ({ isMenuOpen, setIsMenuOpen, userId }) => {
   }, [messages]);
 
   const overrideSubmitHandler = (message) => {
-    message.text = CryptoJS.AES.encrypt(message.text, import.meta.env.VITE_CRYPTOJS_SECRET).toString();
+    if (message.text !== '') {
+      message.text = CryptoJS.AES.encrypt(message.text, import.meta.env.VITE_CRYPTOJS_SECRET).toString();
+    }
     sendMessage(message);
   };
 
@@ -75,7 +84,7 @@ const ChannelInner = ({ isMenuOpen, setIsMenuOpen, userId }) => {
             </IconButton>
           )}
         </div>
-        <VirtualizedMessageList messages={encryptMessages} />
+        <VirtualizedMessageList messages={encryptMessages} messageActions={['edit', 'delete', 'react', 'quotes']} />
         <MessageInput overrideSubmitHandler={overrideSubmitHandler} />
       </Window>
       <div className={classes.thread}>

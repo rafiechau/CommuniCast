@@ -1,0 +1,34 @@
+@import '@styles/base';
+.userListWrap {
+  cursor: pointer;
+  padding: 0.25rem;
+  width: 100%;
+  overflow-y: auto;
+  .userListHeader {
+    @include directionX;
+    align-items: center;
+    padding: 0.5rem 0 0.25rem 0.5rem;
+    margin-bottom: 0.5rem;
+    gap: 0.5rem;
+  }
+  .wrapText {
+    @include directionY;
+    gap: 0.5rem;
+    .userName {
+      @include directionX;
+      font-weight: bold;
+      font-size: medium;
+      line-height: 0.5rem;
+      color: var(--color-text);
+    }
+    .lastMessage {
+      max-width: 10rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+  &:hover {
+    background-color: rgba($color: black, $alpha: 0.2);
+  }
+}
