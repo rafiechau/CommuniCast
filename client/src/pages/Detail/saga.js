@@ -15,7 +15,6 @@ export function* doGetPostById(action) {
   yield put(setLoading(true));
   try {
     const response = yield call(getPostByIdApi, action.postId);
-    console.log(response)
     yield put(setPostById(response));
   } catch (error) {
     toast.error(error.response.data.message);
@@ -23,8 +22,6 @@ export function* doGetPostById(action) {
     yield put(setLoading(false));
   }
 }
-
-
 
 function* handleAddForm(action) {
   try {
@@ -73,9 +70,6 @@ export default function* detailSaga() {
   yield takeLatest(ADDCOMMENT_REQUEST, handleAddForm);
   yield takeLatest(EDITCOMMENT_REQUEST, handleEditForm);
   yield takeLatest(DELETE_COMMENT_REQUEST, handleDeleteComment);
-  yield takeLatest(FETCH_COMMENT_REQUEST, fetchDetailCommentSaga)
+  yield takeLatest(FETCH_COMMENT_REQUEST, fetchDetailCommentSaga);
   yield takeLatest(GET_POST_BY_ID, doGetPostById);
-  yield takeLatest(ADDCOMMENT_REQUEST, handleAddForm);
-  yield takeLatest(EDITCOMMENT_REQUEST, handleEditForm);
-  yield takeLatest(DELETE_COMMENT_REQUEST, handleDeleteComment);
 }

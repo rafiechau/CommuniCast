@@ -38,7 +38,6 @@ export const callAPI = async (endpoint, method, header = {}, params = {}, data =
 export const ping = () => callAPI(urls.ping, 'get');
 
 export const getPostsApi = (token) => callAPI(`${urls.posts}/`, 'GET', { Authorization: `Bearer ${token}` });
-// export const getPaginatedPostsApi = (page, limit) => callAPI(`${urls.posts}?page=${page}&limit=${limit}`, 'GET');
 export const getPostByIdApi = (postId) => callAPI(`${urls.posts}/${postId}`, 'GET');
 export const likePostApi = (postId, data, token) =>
   callAPI(`${urls.posts}/like/${postId}`, 'POST', { Authorization: `Bearer ${token}` }, {}, data);

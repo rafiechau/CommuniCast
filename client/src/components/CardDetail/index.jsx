@@ -1,14 +1,17 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { Button, Card, CardContent, CardMedia, Typography, TextField } from '@mui/material';
-import { connect, useDispatch } from 'react-redux';
+import { Button, Card, CardContent, CardMedia, Typography, TextField, Box } from '@mui/material';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { addCommentRequest, editCommentRequest, deleteCommentRequest } from '@pages/Detail/actions';
 import config from '@config/index';
 import { Avatar } from 'stream-chat-react';
+import { FormattedMessage } from 'react-intl';
+import { selectUser } from '@containers/Client/selectors';
 
-const CommentCard = ({ commenter, text, userLogin, id, idComment, refetchComments }) => {
+const CommentCard = ({ commenter, text, userLogin, id, idComment, refetchComments, userImage }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const user = useSelector(selectUser);
   const [formData, setFormData] = useState({
     comment: text,
   });
@@ -37,21 +40,28 @@ const CommentCard = ({ commenter, text, userLogin, id, idComment, refetchComment
     setIsEditing(false);
     refetchComments();
   };
+
   return (
     <Card sx={{ marginBottom: '10px' }}>
-      <CardContent sx={{ backgroundColor: 'var(--color-accent)' }}>
+      <CardContent sx={{ backgroundColor: 'var(--color-bg)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex' }}>
             <CardMedia
-              sx={{ height: '40px', width: '40px', borderRadius: '50%' }}
-              image="https://images.unsplash.com/photo-1682695798522-6e208131916d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              title="green iguana"
+              component="img"
+              sx={{ width: 48, height: 48, borderRadius: '50%' }}
+              image={userImage}
+              alt={user?.fullName}
             />
             <Typography
-              sx={{ color: '#fff', display: 'flex', alignItems: 'center', marginLeft: '15px' }}
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                marginLeft: '15px',
+                color: 'var(--color-text)',
+              }}
               variant="body2"
             >
-              @{commenter}
+              @{user?.fullName}
             </Typography>
           </div>
           <div style={{ display: 'flex', lineHeight: 0, cursor: 'pointer' }}>
@@ -60,12 +70,25 @@ const CommentCard = ({ commenter, text, userLogin, id, idComment, refetchComment
         </div>
         {isEditing ? (
           <>
-            <TextField name="comment" value={formData.comment} onChange={handleChange} fullWidth variant="standard" />
-            <button onClick={handleSave}>Save</button>
-            <button onClick={handleDelete}>Delete</button>
+            <TextField
+              name="comment"
+              sx={{
+                color: 'var(--color-text)',
+              }}
+              value={formData.comment}
+              onChange={handleChange}
+              fullWidth
+              variant="standard"
+            />
+            <button type="button" onClick={handleSave}>
+              Save
+            </button>
+            <button type="button" onClick={handleDelete}>
+              Delete
+            </button>
           </>
         ) : (
-          <Typography sx={{ color: '#fff', marginTop: '15px' }} variant="body2">
+          <Typography sx={{ marginTop: '15px', color: 'var(--color-text)' }} variant="body2">
             {text}
           </Typography>
         )}
@@ -108,9 +131,26 @@ const CardDetail = ({ post, comment, postId, refetchComments }) => {
       ? `${config.api.server}${post?.image.replace('\\', '/')}`
       : 'https://source.unsplash.com/random';
 
+  const userImageUrl = post?.user?.imagePath
+    ? `${config.api.server}${post?.user?.imagePath.replace('\\', '/')}`
+    : 'https://source.unsplash.com/random';
+
   return (
     <Card sx={{ width: '100%', height: '100%' }}>
-      {post?.image && <CardMedia sx={{ height: 140 }} loading="lazy" image={imageUrl} title={post?.title || 'Image'} />}
+      <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', padding: 2 }}>
+        <CardMedia
+          component="img"
+          sx={{ width: 48, height: 48, borderRadius: '50%' }}
+          image={userImageUrl}
+          alt={post?.user?.fullName}
+        />
+        <Box sx={{ marginLeft: 2 }}>
+          <Typography variant="h6" component="div">
+            {post?.user?.fullName}
+          </Typography>
+        </Box>
+      </Box>
+      {post?.image && <CardMedia sx={{ height: 500 }} loading="lazy" image={imageUrl} title={post?.title || 'Image'} />}
 
       <CardContent>
         <Typography sx={{ fontWeight: '700' }} gutterBottom variant="h5" component="div">
@@ -118,7 +158,7 @@ const CardDetail = ({ post, comment, postId, refetchComments }) => {
         </Typography>
         <div dangerouslySetInnerHTML={{ __html: post?.des }} />
         <Typography gutterBottom variant="h6" component="div" sx={{ marginTop: '3px' }}>
-          Comment
+          <FormattedMessage id="app_comment" />
           <Button onClick={handleToggleComments}>{showComments ? 'Hide Comments' : 'Show Comments'}</Button>
         </Typography>
         {showComments && (
@@ -133,6 +173,7 @@ const CardDetail = ({ post, comment, postId, refetchComments }) => {
                 userLogin={comment?.user}
                 idComment={el.id}
                 refetchComments={refetchComments}
+                userImage={userImageUrl}
               />
             ))}
           </>
@@ -147,7 +188,7 @@ const CardDetail = ({ post, comment, postId, refetchComments }) => {
           onChange={handleChange}
         />
         <Button variant="contained" onClick={handleAddComment}>
-          Add Comment
+          <FormattedMessage id="app_add_comment" />
         </Button>
       </CardContent>
     </Card>
@@ -156,19 +197,6 @@ const CardDetail = ({ post, comment, postId, refetchComments }) => {
 
 CardDetail.propTypes = {
   post: PropTypes.object.isRequired,
-  comment: PropTypes.shape({
-    dataComment: PropTypes.arrayOf(
-      PropTypes.shape({
-        User: PropTypes.shape({
-          id: PropTypes.string,
-          fullName: PropTypes.string,
-        }),
-        comment: PropTypes.string,
-        id: PropTypes.string,
-      })
-    ),
-    user: PropTypes.object,
-  }),
   postId: PropTypes.string.isRequired,
   refetchComments: PropTypes.func.isRequired,
 };

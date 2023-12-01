@@ -24,6 +24,8 @@ export const BottomBar = () => {
     switch (path) {
       case '/':
         return 0;
+      case '/message':
+        return 1;
       case '/payments':
         return 2;
       case '/myPost':
@@ -37,6 +39,9 @@ export const BottomBar = () => {
     switch (newValue) {
       case 0:
         navigate('/');
+        break;
+      case 1:
+        navigate('/message');
         break;
       case 2:
         handlePayment();

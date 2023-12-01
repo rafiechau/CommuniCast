@@ -11,7 +11,7 @@ const { authorizationRolePro } = require('../middleware/authorizationRole');
 const router = express.Router();
 
 router.get('/my-post', authenticationMiddleware, getAllPostsByUser);
-router.get('/:postId', getPostById);
+router.get('/:postId', authenticationMiddleware, getPostById);
 
 router.use(authenticationMiddleware);
 

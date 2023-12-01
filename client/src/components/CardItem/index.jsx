@@ -25,15 +25,15 @@ import { createStructuredSelector } from 'reselect';
 import { useEffect, useState } from 'react';
 import config from '@config/index';
 import { useNavigate } from 'react-router-dom';
-import { selectToken } from '@containers/Client/selectors';
+import { selectToken, selectUser } from '@containers/Client/selectors';
 import { checkUserVote, deletePostById, likePost, unLikePost } from '@pages/Home/actions';
 import { selectUserVotes } from '@pages/Home/selectors';
+import { FormattedMessage } from 'react-intl';
 
-const CardItem = ({ post, token, userHasVoted, onEdit, isEditable = false }) => {
+const CardItem = ({ post, token, userHasVoted, onEdit, isEditable = false, user }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [loadingImg, setLoadingImage] = useState(true);
   const open = Boolean(anchorEl);
   const [isLiked, setIsLiked] = useState(false);
   const [voteCount, setVoteCount] = useState(post?.voteCount || 0);
@@ -42,8 +42,6 @@ const CardItem = ({ post, token, userHasVoted, onEdit, isEditable = false }) => 
   const navigateDetails = () => {
     navigate(`/post/${post?.id}`);
   };
-
-  console.log(post);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -103,29 +101,24 @@ const CardItem = ({ post, token, userHasVoted, onEdit, isEditable = false }) => 
 
   return (
     <Card sx={{ width: '100%', marginTop: 3, position: 'relative' }}>
-      {post?.image && (
-        <CardMedia
-          sx={{ height: 140 }}
-          loading="lazy"
-          image={imageUrl}
-          title={post?.title || 'Image'}
-          onLoad={() => setLoadingImage(false)}
-        />
-      )}
-      <IconButton
-        aria-label="settings"
-        aria-controls="menu-post"
-        aria-haspopup="true"
-        onClick={handleClick}
-        sx={{ position: 'absolute', top: 8, right: 8 }}
-      >
-        <MoreVertIcon />
-      </IconButton>
-      {isEditable && (
-        <Menu id="menu-post" anchorEl={anchorEl} keepMounted open={open} onClose={handleClose}>
-          <MenuItem onClick={() => onEdit()}>Update Post</MenuItem>
-          <MenuItem onClick={handleDelete}>Delete Post</MenuItem>
-        </Menu>
+      {post?.image && <CardMedia sx={{ height: 400 }} loading="lazy" image={imageUrl} title={post?.title || 'Image'} />}
+
+      {isEditable && user.role === 'pro' && (
+        <>
+          <IconButton
+            aria-label="settings"
+            aria-controls="menu-post"
+            aria-haspopup="true"
+            onClick={handleClick}
+            sx={{ position: 'absolute', top: 8, right: 8 }}
+          >
+            <MoreVertIcon />
+          </IconButton>
+          <Menu id="menu-post" anchorEl={anchorEl} keepMounted open={open} onClose={handleClose}>
+            <MenuItem onClick={() => onEdit()}>Update Post</MenuItem>
+            <MenuItem onClick={handleDelete}>Delete Post</MenuItem>
+          </Menu>
+        </>
       )}
       <Box
         sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px' }}
@@ -146,16 +139,20 @@ const CardItem = ({ post, token, userHasVoted, onEdit, isEditable = false }) => 
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">Konfirmasi Hapus</DialogTitle>
+        <DialogTitle id="alert-dialog-title">
+          <FormattedMessage id="app_confirmation_delete_dialog" />
+        </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Apakah kamu yakin ingin menghapus post ini?
+            <FormattedMessage id="app_delete_dialog_header" />
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseConfirmDialog}>Batal</Button>
+          <Button onClick={handleCloseConfirmDialog}>
+            <FormattedMessage id="app_cancel_dialog" />
+          </Button>
           <Button onClick={handleConfirmDelete} autoFocus>
-            Hapus
+            <FormattedMessage id="app_delete_dialog" />
           </Button>
         </DialogActions>
       </Dialog>
@@ -177,12 +174,16 @@ const CardItem = ({ post, token, userHasVoted, onEdit, isEditable = false }) => 
 CardItem.propTypes = {
   post: PropTypes.object.isRequired,
   token: PropTypes.string,
+  userHasVoted: PropTypes.object,
+  onEdit: PropTypes.func,
   isEditable: PropTypes.bool,
+  user: PropTypes.object,
 };
 
 const mapStateToProps = createStructuredSelector({
   token: selectToken,
   userHasVoted: selectUserVotes,
+  user: selectUser,
 });
 
 export default connect(mapStateToProps)(CardItem);

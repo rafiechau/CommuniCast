@@ -4,6 +4,7 @@ const midtransClient = require('midtrans-client')
 const {
   createToken,
 } = require("../utils/jwtUtil");
+const redisClient = require('../utils/redisClient');
 
 const {
   handleServerError,
@@ -120,6 +121,7 @@ const updateRoleStatus = async (req, res) => {
 
     const findUpdateUser = await User.findOne({ where: { id: req.id } });
     const token = createToken(findUpdateUser);
+    redisClient.setex(findUpdateUser.id.toString(), 24 * 60 * 60, token);
     if (!token) {
       throw new Error("Token Created failed");
     }

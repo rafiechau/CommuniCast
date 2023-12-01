@@ -16,7 +16,7 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    protected: false,
+    protected: true,
     component: Home,
     layout: MainLayout,
   },

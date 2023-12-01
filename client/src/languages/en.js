@@ -40,10 +40,30 @@ export default {
   app_user: 'User',
 
   // delete dialog
+  app_confirmation_delete_dialog: 'Confirmation Delete',
   app_delete_dialog_header: 'Are you sure to delete ? ',
   app_delete_dialog_delete: 'Delete',
+  app_cancel_dialog: 'Cancel',
+  app_delete_dialog: 'Delete',
 
   // message page
   app_add_new_message: 'New Chat',
   app_select_meesage_user: 'Select User!',
+
+  app_navigation_home: 'Home',
+  app_navigation_message: 'Chat',
+  app_navigation_payment: 'Communi++',
+  app_navigation_mypost: 'My Tweet',
+  app_navigagtion_post: 'Post',
+
+  app_header_add_tweet: 'Add Tweet',
+  app_form_title: 'Title',
+  app_form_short_des: 'Short Description',
+  app_form_image: 'Add image in here',
+  app_form_button_submit: 'Submit Tweet',
+
+  app_no_post_available: 'No Post Available',
+
+  app_comment: 'Comment',
+  app_add_comment: 'Add Comment',
 };

@@ -1,10 +1,12 @@
 import { Box, Button, Dialog, DialogContent, DialogTitle, IconButton, TextField } from '@mui/material';
-
+import PropTypes from 'prop-types';
 import ReactQuill from 'react-quill';
 import { CloseIcon } from 'stream-chat-react';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { createPost } from '@pages/CreatePost/action';
+import { FormattedMessage } from 'react-intl';
+
 import classes from './style.module.scss';
 import 'react-quill/dist/quill.snow.css';
 
@@ -50,7 +52,7 @@ export const CreatePostDialog = ({ open, onClose }) => {
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>
-        Add Tweet
+        <FormattedMessage id="app_header_add_tweet" />
         <IconButton onClick={onClose} style={{ position: 'absolute', right: 8, top: 8 }}>
           <CloseIcon />
         </IconButton>
@@ -61,7 +63,7 @@ export const CreatePostDialog = ({ open, onClose }) => {
             margin="normal"
             required
             fullWidth
-            label="Title"
+            label={<FormattedMessage id="app_form_title" />}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
@@ -69,7 +71,7 @@ export const CreatePostDialog = ({ open, onClose }) => {
             margin="normal"
             required
             fullWidth
-            label="Short Description"
+            label={<FormattedMessage id="app_form_short_des" />}
             value={shortDescription}
             onChange={(e) => setShortDescription(e.target.value)}
           />
@@ -77,7 +79,9 @@ export const CreatePostDialog = ({ open, onClose }) => {
             {preview ? (
               <img src={preview} alt="Preview" className={classes.imagePreview} />
             ) : (
-              <span className={classes.dropTitle}>Taruh file di sini atau klik untuk memilih</span>
+              <span className={classes.dropTitle}>
+                <FormattedMessage id="app_form_image" />
+              </span>
             )}
             <input
               type="file"
@@ -96,4 +100,9 @@ export const CreatePostDialog = ({ open, onClose }) => {
       </DialogContent>
     </Dialog>
   );
+};
+
+CreatePostDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
 };

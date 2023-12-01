@@ -5,7 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import CardItem from '@components/CardItem';
 import { Box, Fab } from '@mui/material';
 import { createStructuredSelector } from 'reselect';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { selectToken } from '@containers/Client/selectors';
 import EditPostDialog from '@components/EditPostDialog';
 import { CreatePostDialog } from '@components/CreatePostDialog';
@@ -71,15 +71,19 @@ const MyPostPage = ({ myPosts, token }) => {
         <div className={classes.appMain}>
           <div className={classes.feed}>
             <div className={classes.feedHeader}>
-              <h2>Home</h2>
+              <h2>
+                <FormattedMessage id="app_navigation_mypost" />
+              </h2>
             </div>
             <div className={classes.post}>
               {myPosts.userPosts && myPosts.userPosts.length > 0 ? (
                 myPosts.userPosts.map((post) => (
-                  <CardItem key={post.id} post={post} onEdit={() => handleEditPost(post)} isEditable={true} />
+                  <CardItem key={post.id} post={post} onEdit={() => handleEditPost(post)} isEditable />
                 ))
               ) : (
-                <div>No posts available</div> // Tampilkan jika tidak ada post
+                <div>
+                  <FormattedMessage id="app_no_post_available" />
+                </div>
               )}
             </div>
           </div>

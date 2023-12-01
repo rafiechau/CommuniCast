@@ -6,6 +6,7 @@
   --color-text: #001a41;
   --color-button: #001a41;
   --color-accent: #e6ecf0;; 
+  --color-blue: #1DA1F2;
 }
 
 @mixin dark-theme {
@@ -14,4 +15,5 @@
   --color-text: #f4eee0;
   --color-button: #001a41;
   --color-accent: #222527;; 
+  --color-blue: #1DA1F2;
 }

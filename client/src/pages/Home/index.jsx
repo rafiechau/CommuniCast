@@ -7,7 +7,7 @@ import { Box, Fab, InputAdornment, TextField } from '@mui/material';
 import 'react-quill/dist/quill.snow.css';
 import { createStructuredSelector } from 'reselect';
 import { injectIntl } from 'react-intl';
-import { selectToken } from '@containers/Client/selectors';
+import { selectToken, selectUser } from '@containers/Client/selectors';
 import { CreatePostDialog } from '@components/CreatePostDialog';
 import { Sidebar } from '@components/Sidebar';
 import { BottomBar } from '@components/BottomNavigation';
@@ -114,7 +114,7 @@ const Home = ({ allPosts, token }) => {
 
 Home.propTypes = {
   allPosts: PropTypes.array,
-  token: PropTypes.string,
+  token: PropTypes.string
 };
 
 const mapStateToProps = createStructuredSelector({
