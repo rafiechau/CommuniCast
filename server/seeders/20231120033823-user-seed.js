@@ -1,6 +1,12 @@
 "use strict";
 
 /** @type {import('sequelize-cli').Migration} */
+
+const { hashPassword } = require("../utils/bcryptUtil");
+const { chatStreamClient } = require("../utils/streamChatUtil");
+const dotenv = require("dotenv");
+dotenv.config();
+
 module.exports = {
   async up(queryInterface, Sequelize) {
     /**
@@ -12,37 +18,52 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
      */
+    await chatStreamClient.upsertUsers([
+      {
+        id: "1",
+        name: "Ahmad Alif Sofian",
+        image: `${process.env.SERVER_HOST}uploads/default.jpg`,
+      },
+      {
+        id: "2",
+        name: "pro",
+        image: `${process.env.SERVER_HOST}uploads/default.jpg`,
+      },
+      {
+        id: "3",
+        name: "standart",
+        image: `${process.env.SERVER_HOST}uploads/default.jpg`,
+      },
+    ]);
+
     return queryInterface.bulkInsert("Users", [
       {
+        id: 1,
         fullName: "Ahmad Alif Sofian",
         email: "alif12sofian@gmail.com",
         role: "pro",
-        isVerify: false,
-        imagePath: "/uploads/default.jpg",
-        password:
-          "$2b$10$rEqIEgzRz2D9yZ697IkdTO0UBfExxHGt1nskAK8chjJoWNabCnG0O",
+        imagePath: "uploads/default.jpg",
+        password: hashPassword("password123"),
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
+        id: 2,
         fullName: "pro",
         email: "pro@user.com",
         role: "pro",
-        isVerify: false,
-        imagePath: "/uploads/default.jpg",
-        password:
-          "$2b$10$rEqIEgzRz2D9yZ697IkdTO0UBfExxHGt1nskAK8chjJoWNabCnG0O",
+        imagePath: "uploads/default.jpg",
+        password: hashPassword("password123"),
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
+        id: 3,
         fullName: "standart",
         email: "standart@user.com",
         role: "standard",
-        isVerify: false,
-        imagePath: "/uploads/default.jpg",
-        password:
-          "$2b$10$rEqIEgzRz2D9yZ697IkdTO0UBfExxHGt1nskAK8chjJoWNabCnG0O",
+        imagePath: "uploads/default.jpg",
+        password: hashPassword("password123"),
         createdAt: new Date(),
         updatedAt: new Date(),
       },

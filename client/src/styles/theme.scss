@@ -2,14 +2,18 @@
 
 @mixin light-theme {
   --color-bg: #fff;
-  --color-bg-secondary: #e8eef1;
+  --color-bg-secondary: white;
   --color-text: #001a41;
-  --color-button: #ed0226;
+  --color-button: #001a41;
+  --color-accent: #e6ecf0;; 
+  --color-blue: #1DA1F2;
 }
 
 @mixin dark-theme {
-  --color-bg: #4f4557;
-  --color-bg-secondary: #393646;
+  --color-bg: black;
+  --color-bg-secondary: black;
   --color-text: #f4eee0;
-  --color-button: #ed0226;
+  --color-button: #001a41;
+  --color-accent: #222527;; 
+  --color-blue: #1DA1F2;
 }

@@ -54,7 +54,7 @@ exports.handleSendMailForgotPass = async (token, email) => {
         <p>
           Click to Reset Password from CommuniCast
           <a
-            href="${process.env.CLIENT_URL}${token}/reset-password/"
+            href="${process.env.CLIENT_URL}${token}/resetPassword/"
             id="sendPassword"
             target="_blank"
             >Reset Password</a
@@ -86,7 +86,7 @@ exports.handleSendMailVerifyOTP = async (OTP, email) => {
   const message = {
     from: process.env.MY_EMAIL,
     to: email,
-    subject: "Reset Password CommuniCast",
+    subject: "Verify Email CommuniCast",
     html: `<body>
   <div
     style="
@@ -112,7 +112,7 @@ exports.handleSendMailVerifyOTP = async (OTP, email) => {
       <p style="font-size: 1.1em">Hi,</p>
       <p>
         Thank you for choosing CommuniCast. Use the following
-        reset password to login
+        verify Email
       </p>
       <h2
         style="

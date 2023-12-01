@@ -1,0 +1,64 @@
+@import '@styles/base';
+
+.mainWrap {
+  @include directionY;
+  min-height: calc(100vh - 5rem);
+  width: 100vw;
+  max-width: 100%;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  padding: 2rem;
+  .form {
+    .buttonWrap {
+      @include directionX;
+      gap: 0.25rem;
+      align-items: center;
+      .buttonSubmit,
+      .deleteButton {
+        width: fit-content;
+        background-color: var(--color-text);
+        color: var(--color-bg-secondary);
+        border-radius: 2.5rem;
+        padding: 0.5rem 2.5rem 0.5rem 2.5rem;
+        margin: auto;
+        margin-top: 0.75rem;
+        box-shadow: none;
+        cursor: pointer;
+        &:hover {
+          transform: scale(1.1, 1.1);
+        }
+      }
+      .deleteButton {
+        color: white;
+        background-color: var(--color-button);
+        border-color: var(--color-button);
+      }
+    }
+  }
+
+  .backButton {
+    position: absolute;
+    box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.15);
+    font-size: small;
+    padding: 0.25rem 1.25rem 0.25rem 1.25rem;
+    background-color: var(--color-bg-secondary);
+    text-transform: capitalize;
+    color: var(--color-text);
+    cursor: pointer;
+    border: none;
+    margin: 1rem;
+    top: 0;
+    left: 0;
+    &:hover {
+      transform: scale(1.1, 1.1);
+    }
+  }
+}
+.showPassword {
+  @include directionX;
+  align-items: center;
+  padding-top: 0.25rem;
+  font-size: small;
+}
