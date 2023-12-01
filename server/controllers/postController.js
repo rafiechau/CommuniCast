@@ -39,54 +39,6 @@ exports.getPosts = async (req, res) => {
     }
 }
 
-// exports.getPosts = async (req, res) => {
-//     try {
-//         const page = parseInt(req.query.page) || 1; 
-//         const limit = parseInt(req.query.limit) || 5; 
-//         const offset = (page - 1) * limit; 
-
-//         const cacheKey = `${process.env.REDIS_KEY_POST}_${page}_${limit}`;
-//         const cachedJobs = await redisClient.get(cacheKey);
-//         const { id } = req;
-//         const userId = id;
-
-//         if (cachedJobs) {
-//             return handleSuccess(res, { message: "Data from cache", data: JSON.parse(cachedJobs) });
-//         } else {
-//             const { count, rows: posts } = await Post.findAndCountAll({
-//                 include: [
-//                     {
-//                         model: User,
-//                         as: 'user',
-//                         attributes: ['id', 'fullName', 'imagePath']
-//                     },
-//                 ],
-//                 attributes: { exclude: ['userId'] },
-//                 order: [['createdAt', 'DESC']],
-//                 limit,
-//                 offset
-//             });
-
-//             for (let post of posts) {
-//                 const hasVoted = await Vote.findOne({ where: { postId: post.id, userId } });
-//                 post.dataValues.hasVoted = !!hasVoted;
-//             }
-
-//             await redisClient.set(cacheKey, JSON.stringify(posts), 'EX', 100);
-
-//             return handleSuccess(res, { 
-//                 message: "success retrieved from database", 
-//                 data: posts,
-//                 total: count,
-//                 page,
-//                 lastPage: Math.ceil(count / limit)
-//             });
-//         }
-//     } catch (error) {
-//         console.log(error);
-//         return handleServerError(res);
-//     }
-// }
 
 
 
@@ -276,12 +228,8 @@ exports.updatePost = async (req, res) => {
 exports.deletePost = async(req, res) => {
     try{
         const postId = req.params.postId
-        const userId = 1
-        const role = "pro"
-
-        if (role !== "pro") {
-            return res.status(403).json({ message: 'Unauthorized: Only users with "pro" role can delete posts.' });
-        }
+        const { id } = req;
+        const userId = id;
 
         const postToDelete = await Post.findOne({ where: { id: postId, userId: userId } });
         if (!postToDelete) {

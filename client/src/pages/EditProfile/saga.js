@@ -1,3 +1,4 @@
+import CryptoJS from 'crypto-js';
 import toast from 'react-hot-toast';
 import { takeLatest, call, put } from 'redux-saga/effects';
 
@@ -22,9 +23,13 @@ function* sagaHandleGetUser() {
   }
   yield put(setLoading(false));
 }
+
 function* sagaHandleEditProfile({ data, callback }) {
   yield put(setLoading(true));
   try {
+    if (data?.new_password) {
+      data.new_password = CryptoJS.AES.encrypt(data.new_password, import.meta.env.VITE_CRYPTOJS_SECRET).toString();
+    }
     const response = yield call(apiHandleEditProfile, data);
     toast.success(response.message);
     yield put(actionSetProfile(response.data));
@@ -38,6 +43,7 @@ function* sagaHandleEditProfile({ data, callback }) {
   }
   yield put(setLoading(false));
 }
+
 function* sagaHandleDeleteUser({ callback }) {
   yield put(setLoading(true));
   try {

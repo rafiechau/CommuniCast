@@ -30,6 +30,10 @@ export const Sidebar = ({ onOpenTweetDialog }) => {
   const navigateToMyPost = () => {
     navigate('/myPost');
   };
+  
+  const navigateToMsg = () => {
+    navigate('/message');
+  }
 
   return (
     <div className={classes.sidebar}>
@@ -41,7 +45,7 @@ export const Sidebar = ({ onOpenTweetDialog }) => {
           <FormattedMessage id="app_navigation_home" />
         </span>
       </div>
-      <div className={classes.sidebarOption}>
+      <div onClick={navigateToMsg} className={classes.sidebarOption}>
         <MessageIcon color="inherit" />
         <span>
           <FormattedMessage id="app_navigation_message" />

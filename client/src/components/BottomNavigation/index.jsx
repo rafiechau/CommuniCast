@@ -38,7 +38,7 @@ export const BottomBar = () => {
       case 0:
         navigate('/');
         break;
-      case 2: 
+      case 2:
         handlePayment();
         break;
       case 3:

@@ -28,8 +28,6 @@ import { useNavigate } from 'react-router-dom';
 import { selectToken } from '@containers/Client/selectors';
 import { checkUserVote, deletePostById, likePost, unLikePost } from '@pages/Home/actions';
 import { selectUserVotes } from '@pages/Home/selectors';
-import { Avatar } from 'stream-chat-react';
-import { ImageAspectRatio } from '@mui/icons-material';
 
 const CardItem = ({ post, token, userHasVoted, onEdit, isEditable = false }) => {
   const navigate = useNavigate();

@@ -12,6 +12,7 @@ import profileSaga from '@pages/Profile/saga';
 import EditProfileSaga from '@pages/EditProfile/saga';
 import myPostSaga from '@pages/MyPost/saga';
 import editPostSaga from '@pages/EditPost/saga';
+import MessageSaga from '@pages/Message/saga';
 
 export default function* rootSaga() {
   yield all([
@@ -27,5 +28,6 @@ export default function* rootSaga() {
     EditProfileSaga(),
     myPostSaga(),
     editPostSaga(),
+    MessageSaga(),
   ]);
 }

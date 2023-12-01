@@ -55,13 +55,20 @@ const Profile = ({ user, profile }) => {
             </>
           ) : (
             <Avatar className={classes.avatar}>
-              {profile?.fullName?.split(' ')[0][0]} {profile?.fullName?.split(' ')[1][0]}
+              {profile?.fullName?.split(' ')[0][0]}{' '}
+              {profile?.fullName?.split(' ') > 1 && profile?.fullName?.split(' ')[1][0]}
             </Avatar>
           )}
         </div>
-        <p>FullName : {profile?.fullName}</p>
-        <p>E-mail : {profile?.email}</p>
-        <p>Account Type : {profile?.role}</p>
+        <p>
+          <FormattedMessage id="app_user_fullName" /> : {profile?.fullName}
+        </p>
+        <p>
+          <FormattedMessage id="app_user_email" /> : {profile?.email}
+        </p>
+        <p>
+          <FormattedMessage id="app_account_type" /> : {profile?.role}
+        </p>
 
         <button type="button" onClick={() => navigate('/profile/edit')} className={classes.buttonSubmit}>
           <FormattedMessage id="app_profile_edit" />
