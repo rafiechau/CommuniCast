@@ -62,6 +62,7 @@ function* handleUpdateRole() {
 function* handlePayment({ cbSuccess }) {
   try {
     const response = yield call(paymentApi);
+    console.log(response)
     yield put(paymentSuccess(response.token));
     window.snap.pay(response.token, {
       onSuccess() {

@@ -6,8 +6,8 @@ import AssistWalkerTwoToneIcon from '@mui/icons-material/AssistWalkerTwoTone';
 
 import { useDispatch } from 'react-redux';
 import { paymentRequest, updateRole } from '@pages/Home/actions';
-import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
 import classes from './style.module.scss';
 
 export const Sidebar = ({ onOpenTweetDialog }) => {
@@ -18,8 +18,7 @@ export const Sidebar = ({ onOpenTweetDialog }) => {
   const isActive = (path) => location.pathname === path;
 
   const handlePayment = () => {
-    dispatch(
-      paymentRequest(() => {
+    dispatch(paymentRequest(() => {
         dispatch(updateRole());
     }));
   };
@@ -38,25 +37,35 @@ export const Sidebar = ({ onOpenTweetDialog }) => {
 
       <div className={`${classes.sidebarOption} ${isActive('/') ? classes.active : ''}`} onClick={navigateToHome}>
         <HomeIcon color={isActive('/') ? 'primary' : 'inherit'} />
-        <span>Home</span>
+        <span>
+          <FormattedMessage id="app_navigation_home" />
+        </span>
       </div>
       <div className={classes.sidebarOption}>
         <MessageIcon color="inherit" />
-        <span>Message</span>
+        <span>
+          <FormattedMessage id="app_navigation_message" />
+        </span>
       </div>
       <div onClick={handlePayment} className={classes.sidebarOption}>
         <PaymentIcon color="inherit" />
-        <span>Payments</span>
+        <span>
+          <FormattedMessage id="app_navigation_payment" />
+        </span>
       </div>
       <div
         className={`${classes.sidebarOption} ${isActive('/myPost') ? classes.active : ''}`}
         onClick={navigateToMyPost}
       >
         <AssistWalkerTwoToneIcon color={isActive('/myPost') ? 'primary' : 'inherit'} />
-        <span>My Tweet</span>
+        <span>
+          <FormattedMessage id="app_navigation_mypost" />
+        </span>
       </div>
       <button type="submit" className={classes.sidebarTweet} onClick={onOpenTweetDialog}>
-        <span>Tweet</span>
+        <span>
+          <FormattedMessage id="app_navigagtion_post" />
+        </span>
       </button>
     </div>
   );

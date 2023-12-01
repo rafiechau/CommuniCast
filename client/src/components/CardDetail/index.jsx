@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { Button, Card, CardActions, CardContent, CardMedia, Typography, TextField } from '@mui/material';
+import { Button, Card, CardContent, CardMedia, Typography, TextField } from '@mui/material';
 import { connect, useDispatch } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { addCommentRequest, editCommentRequest, deleteCommentRequest } from '@pages/Detail/actions';
 import config from '@config/index';
+import { Avatar } from 'stream-chat-react';
 
 const CommentCard = ({ commenter, text, userLogin, id, idComment, refetchComments }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -16,7 +17,7 @@ const CommentCard = ({ commenter, text, userLogin, id, idComment, refetchComment
     if (id == userLogin.id) {
       setIsEditing(!isEditing);
     }
-  }
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -26,23 +27,30 @@ const CommentCard = ({ commenter, text, userLogin, id, idComment, refetchComment
   };
 
   const handleSave = () => {
-    dispatch(editCommentRequest({ formData, idComment }))
+    dispatch(editCommentRequest({ formData, idComment }));
     setIsEditing(false);
     refetchComments();
   };
 
   const handleDelete = () => {
-    dispatch(deleteCommentRequest(idComment))
+    dispatch(deleteCommentRequest(idComment));
     setIsEditing(false);
     refetchComments();
-  }
+  };
   return (
     <Card sx={{ marginBottom: '10px' }}>
-      <CardContent sx={{ backgroundColor: 'grey' }}>
+      <CardContent sx={{ backgroundColor: 'var(--color-accent)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex' }}>
-            <CardMedia sx={{ height: '40px', width: '40px', borderRadius: '50%' }} image="https://images.unsplash.com/photo-1682695798522-6e208131916d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" title="green iguana" />
-            <Typography sx={{ color: '#fff', display: 'flex', alignItems: 'center', marginLeft: '15px' }} variant="body2">
+            <CardMedia
+              sx={{ height: '40px', width: '40px', borderRadius: '50%' }}
+              image="https://images.unsplash.com/photo-1682695798522-6e208131916d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              title="green iguana"
+            />
+            <Typography
+              sx={{ color: '#fff', display: 'flex', alignItems: 'center', marginLeft: '15px' }}
+              variant="body2"
+            >
               @{commenter}
             </Typography>
           </div>
@@ -52,12 +60,9 @@ const CommentCard = ({ commenter, text, userLogin, id, idComment, refetchComment
         </div>
         {isEditing ? (
           <>
-            <><TextField
-            name="comment"
-            value={formData.comment}
-            onChange={handleChange}
-            fullWidth
-            variant="standard" /><button onClick={handleSave}>Save</button><button onClick={handleDelete}>Delete</button></>
+            <TextField name="comment" value={formData.comment} onChange={handleChange} fullWidth variant="standard" />
+            <button onClick={handleSave}>Save</button>
+            <button onClick={handleDelete}>Delete</button>
           </>
         ) : (
           <Typography sx={{ color: '#fff', marginTop: '15px' }} variant="body2">
@@ -105,7 +110,8 @@ const CardDetail = ({ post, comment, postId, refetchComments }) => {
 
   return (
     <Card sx={{ width: '100%', height: '100%' }}>
-      <CardMedia sx={{ height: '50vh' }} image={imageUrl} title={post?.title || 'Image'} />
+      {post?.image && <CardMedia sx={{ height: 140 }} loading="lazy" image={imageUrl} title={post?.title || 'Image'} />}
+
       <CardContent>
         <Typography sx={{ fontWeight: '700' }} gutterBottom variant="h5" component="div">
           {post?.title}
@@ -116,6 +122,7 @@ const CardDetail = ({ post, comment, postId, refetchComments }) => {
           <Button onClick={handleToggleComments}>{showComments ? 'Hide Comments' : 'Show Comments'}</Button>
         </Typography>
         {showComments && (
+          // eslint-disable-next-line react/jsx-no-useless-fragment
           <>
             {comment?.dataComment?.map((el, index) => (
               <CommentCard
@@ -149,6 +156,21 @@ const CardDetail = ({ post, comment, postId, refetchComments }) => {
 
 CardDetail.propTypes = {
   post: PropTypes.object.isRequired,
+  comment: PropTypes.shape({
+    dataComment: PropTypes.arrayOf(
+      PropTypes.shape({
+        User: PropTypes.shape({
+          id: PropTypes.string,
+          fullName: PropTypes.string,
+        }),
+        comment: PropTypes.string,
+        id: PropTypes.string,
+      })
+    ),
+    user: PropTypes.object,
+  }),
+  postId: PropTypes.string.isRequired,
+  refetchComments: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({});

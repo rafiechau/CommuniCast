@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import AddIcon from '@mui/icons-material/Add';
 import CardItem from '@components/CardItem';
-import { Box, Fab } from '@mui/material';
+import { Box, Fab, InputAdornment, TextField } from '@mui/material';
 import 'react-quill/dist/quill.snow.css';
 import { createStructuredSelector } from 'reselect';
 import { injectIntl } from 'react-intl';
@@ -11,6 +11,7 @@ import { selectToken } from '@containers/Client/selectors';
 import { CreatePostDialog } from '@components/CreatePostDialog';
 import { Sidebar } from '@components/Sidebar';
 import { BottomBar } from '@components/BottomNavigation';
+import SearchIcon from '@mui/icons-material/Search';
 import classes from './style.module.scss';
 import { selectAllPosts } from './selectors';
 import { getAllPosts } from './actions';
@@ -18,7 +19,18 @@ import { getAllPosts } from './actions';
 const Home = ({ allPosts, token }) => {
   const dispatch = useDispatch();
   const [isCreatePostDialogOpen, setIsCreatePostDialogOpen] = useState(false);
-  // console.log(allPosts);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value.toLowerCase());
+  };
+
+  const filteredPosts = searchTerm
+    ? allPosts.filter(
+        (post) =>
+          post.title.toLowerCase().includes(searchTerm) || post.shortDescription.toLowerCase().includes(searchTerm)
+      )
+    : allPosts;
 
   useEffect(() => {
     if (token) {
@@ -72,13 +84,25 @@ const Home = ({ allPosts, token }) => {
         <div className={classes.appMain}>
           <div className={classes.feed}>
             <div className={classes.feedHeader}>
-              <h2>Home</h2>
+              <TextField
+                variant="outlined"
+                placeholder="Search posts..."
+                onChange={handleSearchChange}
+                sx={{ margin: '10px 0', width: '100%' }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              />
             </div>
             <div className={classes.post}>
-              {allPosts && allPosts.length > 0 ? (
-                allPosts.map((post) => <CardItem key={post.id} post={post} />)
+              {filteredPosts.length > 0 ? (
+                filteredPosts.map((post) => <CardItem key={post.id} post={post} />)
               ) : (
-                <div>No posts available</div>
+                <div>{searchTerm ? 'No posts found matching your search' : 'No posts available'}</div>
               )}
             </div>
           </div>

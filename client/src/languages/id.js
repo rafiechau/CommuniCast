@@ -39,4 +39,11 @@ export default {
   // delete dialog
   app_delete_dialog_header: 'Kamu yakin mau hapus ini ? ',
   app_delete_dialog_delete: 'Hapus',
+
+  app_navigation_home: 'Beranda',
+  app_navigation_message: 'Chat',
+  app_navigation_payment: 'Communi++',
+  app_navigation_mypost: 'Postingan Saya',
+  app_navigagtion_post: 'Post',
+
 };

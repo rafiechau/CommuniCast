@@ -28,6 +28,8 @@ import { useNavigate } from 'react-router-dom';
 import { selectToken } from '@containers/Client/selectors';
 import { checkUserVote, deletePostById, likePost, unLikePost } from '@pages/Home/actions';
 import { selectUserVotes } from '@pages/Home/selectors';
+import { Avatar } from 'stream-chat-react';
+import { ImageAspectRatio } from '@mui/icons-material';
 
 const CardItem = ({ post, token, userHasVoted, onEdit, isEditable = false }) => {
   const navigate = useNavigate();
@@ -42,6 +44,8 @@ const CardItem = ({ post, token, userHasVoted, onEdit, isEditable = false }) => 
   const navigateDetails = () => {
     navigate(`/post/${post?.id}`);
   };
+
+  console.log(post);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -97,15 +101,19 @@ const CardItem = ({ post, token, userHasVoted, onEdit, isEditable = false }) => 
       ? `${config.api.server}${post?.image.replace('\\', '/')}`
       : 'https://source.unsplash.com/random';
 
+  // const imageUser = `${config.api.server}${post?.user?.imagePath}`;
+
   return (
     <Card sx={{ width: '100%', marginTop: 3, position: 'relative' }}>
-      <CardMedia
-        sx={{ height: 140 }}
-        loading="lazy"
-        image={imageUrl}
-        title={post?.title || 'Image'}
-        onLoad={() => setLoadingImage(false)}
-      />
+      {post?.image && (
+        <CardMedia
+          sx={{ height: 140 }}
+          loading="lazy"
+          image={imageUrl}
+          title={post?.title || 'Image'}
+          onLoad={() => setLoadingImage(false)}
+        />
+      )}
       <IconButton
         aria-label="settings"
         aria-controls="menu-post"
@@ -121,7 +129,6 @@ const CardItem = ({ post, token, userHasVoted, onEdit, isEditable = false }) => 
           <MenuItem onClick={handleDelete}>Delete Post</MenuItem>
         </Menu>
       )}
-
       <Box
         sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px' }}
         onClick={navigateDetails}

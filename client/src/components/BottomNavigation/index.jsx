@@ -4,34 +4,46 @@ import MessageIcon from '@mui/icons-material/Message';
 import HomeIcon from '@mui/icons-material/Home';
 import PaymentIcon from '@mui/icons-material/Payment';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { paymentRequest, updateRole } from '@pages/Home/actions';
+import { useDispatch } from 'react-redux';
 
 export const BottomBar = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Menentukan tab aktif berdasarkan path
+  const handlePayment = () => {
+    dispatch(
+      paymentRequest(() => {
+        dispatch(updateRole());
+      })
+    );
+  };
+
   const getActiveTab = (path) => {
     switch (path) {
       case '/':
         return 0;
+      case '/payments':
+        return 2;
       case '/myPost':
         return 3;
-      // Tambahkan case lain untuk path yang berbeda
       default:
         return 0;
     }
   };
 
-  // Menangani perubahan tab
   const handleChange = (event, newValue) => {
     switch (newValue) {
       case 0:
         navigate('/');
         break;
+      case 2: 
+        handlePayment();
+        break;
       case 3:
         navigate('/myPost');
         break;
-      // Tambahkan case lain untuk nilai yang berbeda
     }
   };
 
