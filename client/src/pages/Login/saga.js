@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 import { jwtDecode } from 'jwt-decode';
 import { takeLatest, call, put } from 'redux-saga/effects';
 
-import { apiHandleLogin } from '@domain/api';
+import { apiHandleLogin, apiHandleLogout } from '@domain/api';
 
 import { showPopup, setLoading } from '@containers/App/actions';
 import { setLogin, setToken, setUser } from '@containers/Client/actions';
@@ -33,7 +33,8 @@ function* sagaHandleLogin({ data, callback }) {
 function* sagaHandleLogout({ callback }) {
   yield put(setLoading(true));
   try {
-    toast.success('Logout Success');
+    const response = yield call(apiHandleLogout);
+    toast.success(response.message);
     yield put(setLogin(false));
     yield put(setToken(null));
     yield put(setUser(null));

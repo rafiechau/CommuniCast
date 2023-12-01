@@ -10,6 +10,7 @@ const {
   editProfile,
   editPhotoProfile,
   deleteUser,
+  logout,
 } = require("../controllers/authController");
 
 const {
@@ -27,6 +28,7 @@ const { multerMiddleware } = require("../utils/multer");
 const router = Router();
 
 router.post("/login", login);
+router.post("/logout", logout);
 router.post("/register", register);
 router.post("/verifyEmail", verifyEmail);
 router.post("/checkOtpVerifyEmail", verifyEmailMiddleware, checkOtpVerifyEmail);

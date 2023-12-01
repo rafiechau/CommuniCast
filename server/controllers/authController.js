@@ -21,6 +21,7 @@ const {
   createTokenForForgetPassword,
   createTokenVerifyEmail,
 } = require("../utils/jwtUtil");
+const redisClient = require("../utils/redisClient");
 
 const { User } = require("../models");
 
@@ -31,7 +32,17 @@ dotenv.config();
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-
+    const maxAttempts = process.env.MAX_ATTEMPTS_LOGIN;
+    const attemptsExpire = eval(process.env.ATTEMPTS_EXPIRE);
+    redisClient.expire(`loginAttempts:${email}`, attemptsExpire);
+    const attempts = await redisClient.incr(`loginAttempts:${email}`);
+    if (attempts > maxAttempts) {
+      return handleClientError(
+        res,
+        400,
+        `hit maximum Login Attempt, try again in ${attemptsExpire} seconds`
+      );
+    }
     const plainPassword = CryptoJS.AES.decrypt(
       password,
       process.env.CRYPTOJS_SECRET
@@ -57,6 +68,7 @@ exports.login = async (req, res) => {
     if (!token) {
       throw new Error("Token Created failed");
     }
+    redisClient.setex(dataUser.id.toString(), 24 * 60 * 60, token);
     return handleSuccess(res, {
       token: token,
       message: "Login success",
@@ -235,7 +247,11 @@ exports.editProfile = async (req, res) => {
     const { id } = req;
     const newUser = req.body;
     if (newUser?.new_password) {
-      newUser.password = hashPassword(newUser.new_password);
+      const plainPassword = CryptoJS.AES.decrypt(
+        newUser.new_password,
+        process.env.CRYPTOJS_SECRET
+      ).toString(CryptoJS.enc.Utf8);
+      newUser.password = hashPassword(plainPassword);
       delete newUser.new_password;
     }
 
@@ -302,6 +318,16 @@ exports.deleteUser = async (req, res) => {
       await chatStreamClient.deleteUser(id.toString());
     }
     return handleSuccess(res, { message: "deleted user" });
+  } catch (error) {
+    return handleServerError(res);
+  }
+};
+exports.logout = async (req, res) => {
+  try {
+    const { id } = req;
+    // delete token
+    redisClient.del(id.toString());
+    return handleSuccess(res, { message: "logout" });
   } catch (error) {
     return handleServerError(res);
   }
