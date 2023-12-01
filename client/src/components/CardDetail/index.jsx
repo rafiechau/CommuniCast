@@ -1,66 +1,113 @@
+import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { Button, Card, CardActions, CardContent, CardMedia, Typography, TextField } from '@mui/material';
-import { connect, useDispatch } from 'react-redux';
+import { Button, Card, CardContent, CardMedia, Typography, TextField, Box } from '@mui/material';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { addCommentRequest } from '@pages/Detail/actions';
+import { addCommentRequest, editCommentRequest, deleteCommentRequest } from '@pages/Detail/actions';
+import config from '@config/index';
+import { Avatar } from 'stream-chat-react';
+import { FormattedMessage } from 'react-intl';
+import { selectUser } from '@containers/Client/selectors';
 
-const CommentCard = ({ commenter, text }) => {
+const CommentCard = ({ commenter, text, userLogin, id, idComment, refetchComments, userImage }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const handleEditClick = () => {
-    setIsEditing(true);
+  const user = useSelector(selectUser);
+  const [formData, setFormData] = useState({
+    comment: text,
+  });
+  const dispatch = useDispatch();
+  const handleToggleEdit = () => {
+    if (id == userLogin.id) {
+      setIsEditing(!isEditing);
+    }
   };
-  const handleSaveClick = () => {
-    // Implementasi logika untuk menyimpan perubahan teks di sini
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      comment: e.target.value,
+    });
+  };
+
+  const handleSave = () => {
+    dispatch(editCommentRequest({ formData, idComment }));
     setIsEditing(false);
+    refetchComments();
   };
+
+  const handleDelete = () => {
+    dispatch(deleteCommentRequest(idComment));
+    setIsEditing(false);
+    refetchComments();
+  };
+
   return (
-    <>
-      <Card sx={{ marginBottom: '10px' }}>
-        <CardContent sx={{ backgroundColor: 'grey' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex' }}>
-              <CardMedia sx={{ height: "40px", width: "40px", borderRadius: "50%" }} image="https://images.unsplash.com/photo-1682695798522-6e208131916d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" title="green iguana" />
-              <Typography sx={{ color: '#fff', display: 'flex', alignItems: 'center', marginLeft: '15px' }} variant="body2">
-                @{commenter}
-              </Typography>
-            </div>
-            <div style={{ display: 'flex', lineHeight: 0, cursor: 'pointer' }}>
-              <p onClick={() => (isEditing ? setIsEditing(false) : setIsEditing(true))}>...</p>
-            </div>
-          </div>
-          {isEditing ? (
-            <>
-              <TextField
-                // value={editedText}
-                value={text}
-                // onChange={handleChange}
-                fullWidth
-                variant="standard"
-              />
-              <button >Save</button>
-              <button >Delete</button>
-            </>
-          ) : (
-            <Typography sx={{ color: '#fff' }} variant="body2">
-              {text}
+    <Card sx={{ marginBottom: '10px' }}>
+      <CardContent sx={{ backgroundColor: 'var(--color-bg)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex' }}>
+            <CardMedia
+              component="img"
+              sx={{ width: 48, height: 48, borderRadius: '50%' }}
+              image={userImage}
+              alt={user?.fullName}
+            />
+            <Typography
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                marginLeft: '15px',
+                color: 'var(--color-text)',
+              }}
+              variant="body2"
+            >
+              @{user?.fullName}
             </Typography>
-          )}
-        </CardContent>
-      </Card >
-    </>
+          </div>
+          <div style={{ display: 'flex', lineHeight: 0, cursor: 'pointer' }}>
+            <p onClick={handleToggleEdit}>...</p>
+          </div>
+        </div>
+        {isEditing ? (
+          <>
+            <TextField
+              name="comment"
+              sx={{
+                color: 'var(--color-text)',
+              }}
+              value={formData.comment}
+              onChange={handleChange}
+              fullWidth
+              variant="standard"
+            />
+            <button type="button" onClick={handleSave}>
+              Save
+            </button>
+            <button type="button" onClick={handleDelete}>
+              Delete
+            </button>
+          </>
+        ) : (
+          <Typography sx={{ marginTop: '15px', color: 'var(--color-text)' }} variant="body2">
+            {text}
+          </Typography>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 
-const CardDetail = () => {
+const CardDetail = ({ post, comment, postId, refetchComments }) => {
   const dispatch = useDispatch();
   const [showComments, setShowComments] = useState(false);
-  const [commentText, setCommentText] = useState('');
   const [formData, setFormData] = useState({
     comment: '',
   });
+  const [editIndex, setEditIndex] = useState(null);
 
   const handleToggleComments = () => {
     setShowComments(!showComments);
+    setEditIndex(null);
   };
 
   const handleChange = (e) => {
@@ -72,36 +119,67 @@ const CardDetail = () => {
   };
 
   const handleAddComment = () => {
-    dispatch(addCommentRequest(formData));
-    setCommentText(''); // Clear the input after adding the comment
+    if (formData.comment.trim() === '') {
+      return; // Jangan lakukan apa-apa jika komentar kosong
+    }
+    dispatch(addCommentRequest({ formData, postId }));
+    setFormData({ comment: '' });
   };
+
+  const imageUrl =
+    post && post?.image
+      ? `${config.api.server}${post?.image.replace('\\', '/')}`
+      : 'https://source.unsplash.com/random';
+
+  const userImageUrl = post?.user?.imagePath
+    ? `${config.api.server}${post?.user?.imagePath.replace('\\', '/')}`
+    : 'https://source.unsplash.com/random';
 
   return (
     <Card sx={{ width: '100%', height: '100%' }}>
-      <CardMedia sx={{ height: "50vh" }} image="https://images.unsplash.com/photo-1682695798522-6e208131916d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" title="green iguana" />
+      <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', padding: 2 }}>
+        <CardMedia
+          component="img"
+          sx={{ width: 48, height: 48, borderRadius: '50%' }}
+          image={userImageUrl}
+          alt={post?.user?.fullName}
+        />
+        <Box sx={{ marginLeft: 2 }}>
+          <Typography variant="h6" component="div">
+            {post?.user?.fullName}
+          </Typography>
+        </Box>
+      </Box>
+      {post?.image && <CardMedia sx={{ height: 500 }} loading="lazy" image={imageUrl} title={post?.title || 'Image'} />}
+
       <CardContent>
         <Typography sx={{ fontWeight: '700' }} gutterBottom variant="h5" component="div">
-          Tittle
+          {post?.title}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents
-          except Antarctica
-        </Typography>
+        <div dangerouslySetInnerHTML={{ __html: post?.des }} />
         <Typography gutterBottom variant="h6" component="div" sx={{ marginTop: '3px' }}>
-          Comment
-          <Button onClick={handleToggleComments}>
-            {showComments ? 'Hide Comments' : 'Show Comments'}
-          </Button>
+          <FormattedMessage id="app_comment" />
+          <Button onClick={handleToggleComments}>{showComments ? 'Hide Comments' : 'Show Comments'}</Button>
         </Typography>
         {showComments && (
+          // eslint-disable-next-line react/jsx-no-useless-fragment
           <>
-            <CommentCard commenter="babiAnal1318" text="Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica" />
-            <CommentCard commenter="babiAnal1318" text="Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica" />
-            {/* Add more CommentCard components as needed */}
+            {comment?.dataComment?.map((el, index) => (
+              <CommentCard
+                key={index}
+                commenter={el.User.fullName}
+                text={el.comment}
+                id={el.User.id}
+                userLogin={comment?.user}
+                idComment={el.id}
+                refetchComments={refetchComments}
+                userImage={userImageUrl}
+              />
+            ))}
           </>
         )}
         <TextField
-          sx={{ marginBottom: "10px" }}
+          sx={{ marginBottom: '10px' }}
           label="Add a comment"
           variant="outlined"
           fullWidth
@@ -109,15 +187,19 @@ const CardDetail = () => {
           value={formData.comment}
           onChange={handleChange}
         />
-        <Button variant="contained" onClick={handleAddComment} >
-          Add Comment
+        <Button variant="contained" onClick={handleAddComment}>
+          <FormattedMessage id="app_add_comment" />
         </Button>
       </CardContent>
     </Card>
   );
 };
 
-CardDetail.propTypes = {};
+CardDetail.propTypes = {
+  post: PropTypes.object.isRequired,
+  postId: PropTypes.string.isRequired,
+  refetchComments: PropTypes.func.isRequired,
+};
 
 const mapStateToProps = createStructuredSelector({});
 

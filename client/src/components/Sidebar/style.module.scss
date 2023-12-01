@@ -1,0 +1,57 @@
+.sidebar{
+    // border-right: 1px solid gray;
+    flex: 0.2;
+    padding: 2rem;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: var(--color-accent);
+    .sidebarTwitterIcon{
+        color: var(--color-blue);
+        font-size: 3rem;
+        margin: 0 2rem 2rem 2rem;
+        transition: transform 200ms ease-in-out;
+    }
+    .sidebarTwitterIcon:hover{
+        transform: scale(1.1); 
+    }
+    .sidebarOption{
+        @include directionX;
+        
+        align-items: center;
+        cursor: pointer;
+        color: var(--color-blue);
+        margin-bottom: 1rem;
+        padding: 0.5rem .8rem;
+        border-radius: 30px;
+        transition: background-color 200ms ease-in-out;
+        span{
+            padding-left: 1rem;
+        }
+    }
+    .sidebarOption:hover{
+        background-color: var(--color-blue);
+        color: white;
+    }
+    .sidebarTweet{
+        background-color: var(--color-text);
+        color: var(--color-bg-secondary);
+        font-weight: 900;
+        text-transform: inherit;
+        border-radius: 30px;
+        height: 3rem;
+        margin-top: 2rem;
+        width: 100%;
+        border: none;
+        transition: background-color 200ms ease-in-out;
+        cursor: pointer;
+    }
+    .sidebarTweet:hover{
+        background-color: rgb(30, 142, 227) !important;
+        cursor: pointer;
+    }
+}
+
+@media screen and (max-width: 576px){
+    .sidebar{
+        display: none;
+    }
+}

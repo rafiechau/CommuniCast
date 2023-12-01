@@ -42,8 +42,28 @@ export default {
   // delete dialog
   app_delete_dialog_header: 'Kamu yakin mau hapus ini ? ',
   app_delete_dialog_delete: 'Hapus',
+  app_cancel_dialog: 'Batal',
+  app_delete_dialog: 'Hapus',
+  app_confirmation_delete_dialog: 'Konfirmasi Hapus',
+
+  app_navigation_home: 'Beranda',
+  app_navigation_message: 'Chat',
+  app_navigation_payment: 'Communi++',
+  app_navigation_mypost: 'Tweet Saya',
+  app_navigagtion_post: 'Post',
 
   // message page
   app_add_new_message: 'Pesan Baru',
   app_select_meesage_user: 'Pilih Pengguna!',
+
+  app_header_add_tweet: 'Tambah Tweet',
+  app_form_title: 'Judul',
+  app_form_short_des: 'Deskripsi Singkat',
+  app_form_image: 'Tarok photo disini',
+  app_form_button_submit: 'Kirim Tweet',
+
+  app_no_post_available: 'Tidak ada data yang tersedia',
+
+  app_comment: 'Komentar',
+  app_add_comment: 'Tambah Komentar',
 };

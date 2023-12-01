@@ -11,63 +11,12 @@
         display: flex;
         flex: 1;
         height: 100%;
-        .sidebar{
-            // border-right: 1px solid gray;
-            flex: 0.2;
-            padding: 2rem;
-            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-            background-color: #f8f8f8;
-            .sidebarTwitterIcon{
-                color: #1DA1F2;
-                font-size: 3rem;
-                margin: 0 2rem 2rem 2rem;
-                transition: transform 200ms ease-in-out;
-            }
-            .sidebarTwitterIcon:hover{
-                transform: scale(1.1); 
-            }
-            .sidebarOption{
-                display: flex;
-                align-items: center;
-                cursor: pointer;
-                color: black;
-                margin-bottom: 1rem;
-                padding: 0.5rem 1rem;
-                border-radius: 30px;
-                transition: background-color 200ms ease-in-out;
-                h2{
-                    font-weight: 700;
-                    font-size: 1rem;
-                    margin-right: 1.5rem;
-                }
-            }
-            .sidebarOption:hover{
-                background-color: #1DA1F2;
-                color: white;
-            }
-            .sidebarTweet{
-                background-color: #1DA1F2;
-                color: white;
-                font-weight: 900;
-                text-transform: inherit;
-                border-radius: 30px;
-                height: 3rem;
-                margin-top: 2rem;
-                width: 100%;
-                border: none;
-                transition: background-color 200ms ease-in-out;
-                cursor: pointer;
-            }
-            .sidebarTweet:hover{
-                background-color: rgb(30, 142, 227) !important;
-                cursor: pointer;
-            }
-        }
+        
         .appMain{
             flex: 1;
             display: flex;
             flex-direction: row;
-            background-color: #e6ecf0;
+            background-color: var(--color-accent);
             .feed{
                 flex: 1;
                 overflow-y: scroll;
@@ -75,7 +24,7 @@
                     display: flex;
                     align-items: center;
                     padding: 10px;
-                    background-color: white;
+                    background-color: var(--color-accent);
                     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
                     position: sticky;
                     top: 0;
@@ -84,12 +33,12 @@
                         font-size: 1.5rem;
                         flex: 1;
                         font-weight: 800;
-                        color: #333;
+                        color: #1DA1F2;
                     }
                 }
                 .post{
+                    background-color: var(--color-accent);
                     padding: 20px;
-                    border-radius: 15px;
                     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
                 }
                 .CardItem:hover {
@@ -101,16 +50,15 @@
     }
 }
 
-
 @media screen and (max-width: 576px){
     /* Mobile */
     .appMainContent{
-                flex-direction: column;
-                .sidebar{
-                    display: none;
-                }
-                .appMain{
-                    flex: 1;
-                }
-            }
+        flex-direction: column;
+        .sidebar{
+            display: none;
+        }
+        .appMain{
+            flex: 1;
+        }
+    }
 }

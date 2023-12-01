@@ -1,74 +1,84 @@
-/* eslint-disable react/button-has-type */
+import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import TwitterIcon from '@mui/icons-material/Twitter';
-import { ping } from '@containers/App/actions';
-import MessageIcon from '@mui/icons-material/Message';
-import HomeIcon from '@mui/icons-material/Home';
-import PaymentIcon from '@mui/icons-material/Payment';
-import CardItem from '@components/CardItem';
+import { connect, useDispatch } from 'react-redux';
 import CardDetail from '@components/CardDetail';
-import { BottomNavigation, BottomNavigationAction, Box } from '@mui/material';
+import { Box, CircularProgress, Fab } from '@mui/material';
+import { useParams } from 'react-router-dom';
+import { createStructuredSelector } from 'reselect';
+import { selectLoading } from '@containers/App/selectors';
+import { injectIntl } from 'react-intl';
+import { Sidebar } from '@components/Sidebar';
+import { CreatePostDialog } from '@components/CreatePostDialog';
+import { BottomBar } from '@components/BottomNavigation';
+import AddIcon from '@mui/icons-material/Add';
+import { fetchCommentRequest, getPostById } from './actions';
+import { selectComment, selectPost } from './selectors';
+
 import classes from './style.module.scss';
-import { useNavigate } from 'react-router-dom';
 
-const Detail = () => {
+const Detail = ({ post, loading, comment }) => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [value, setValue] = useState(0);
-  // useEffect(() => {
-  //   dispatch(ping());
-  // }, [dispatch]);
+  const [isCreatePostDialogOpen, setIsCreatePostDialogOpen] = useState(false);
+  const { postId } = useParams();
 
-  
+
+  useEffect(() => {
+    dispatch(getPostById(postId));
+  }, [dispatch, postId]);
+
+  useEffect(() => {
+    dispatch(fetchCommentRequest(postId));
+  }, [dispatch]);
+
+  const refetchComments = () => {
+    dispatch(fetchCommentRequest(postId));
+  };
+
+  const handleOpenCreatePostDialog = () => {
+    setIsCreatePostDialogOpen(true);
+  };
+
+  const handleCloseCreatePostDialog = () => {
+    setIsCreatePostDialogOpen(false);
+  };
 
   return (
     <div className={classes.app}>
       <Box
         sx={{
           width: '100%',
-          display: { xs: 'block', sm: 'none', position: 'fixed', bottom: 0, width: '100%', zIndex: 1000 },
+          display: { xs: 'block', sm: 'none' },
+          position: 'fixed',
+          bottom: 0,
+          zIndex: 1000,
         }}
       >
-        <BottomNavigation
-          showLabels
-          value={value}
-          onChange={(event, newValue) => {
-            setValue(newValue);
-          }}
+        <BottomBar />
+        <Fab
+          color="primary"
+          aria-label="add"
+          className={classes.fab}
+          onClick={handleOpenCreatePostDialog}
+          sx={{ position: 'fixed', bottom: 60, right: 16 }}
         >
-          <BottomNavigationAction label="Home" icon={<HomeIcon />} />
-          <BottomNavigationAction label="Message" icon={<MessageIcon />} />
-          <BottomNavigationAction label="Payments" icon={<PaymentIcon />} />
-        </BottomNavigation>
+          <AddIcon />
+        </Fab>
       </Box>
-      ;
       <div className={classes.appMainContent}>
         {/* Bottom Navigation untuk Mobile */}
 
-        <div className={classes.sidebar}>
-          <TwitterIcon className={classes.sidebarTwitterIcon} />
-
-          <div className={classes.sidebarOption}>
-            <HomeIcon />
-            <h2>Home</h2>
-          </div>
-          <div className={classes.sidebarOption}>
-            <MessageIcon />
-            <h2>Message</h2>
-          </div>
-          <div className={classes.sidebarOption}>
-            <PaymentIcon />
-            <h2>Payments</h2>
-          </div>
-          <button className={classes.sidebarTweet}>
-            <span>Tweet</span>
-          </button>
-        </div>
+        <Sidebar onOpenTweetDialog={handleOpenCreatePostDialog} />
+        <CreatePostDialog open={isCreatePostDialogOpen} onClose={handleCloseCreatePostDialog} />
         <div className={classes.appMain}>
           <div className={classes.feed}>
             <div className={classes.post}>
-              <CardDetail />
+              {loading ? (
+                <div className={classes.loading}>
+                  <CircularProgress color="warning" />
+                </div>
+              ) : (
+                <CardDetail comment={comment} post={post} postId={postId} refetchComments={refetchComments} />
+              )}
             </div>
           </div>
         </div>
@@ -77,4 +87,16 @@ const Detail = () => {
   );
 };
 
-export default Detail;
+Detail.propTypes = {
+  post: PropTypes.object,
+  loading: PropTypes.bool,
+  comment: PropTypes.object,
+};
+
+const mapStateToProps = createStructuredSelector({
+  post: selectPost,
+  loading: selectLoading,
+  comment: selectComment,
+});
+
+export default connect(mapStateToProps)(Detail);

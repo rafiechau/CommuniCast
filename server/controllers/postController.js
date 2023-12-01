@@ -1,28 +1,101 @@
-const { unlink } = require("fs");
-const { Post, User } = require('../models');
+const fs = require('fs');
+const path = require('path');
+const { Post, User, Vote } = require('../models');
 const { handleServerError, handleSuccess, handleResponse, handleNotFound, handleCreated } = require("../helpers/handleResponseHelper");
 const { validateJoi, schemaPost } = require('../helpers/joiHelper');
+const redisClient = require('../utils/redisClient');
 
 exports.getPosts = async (req, res) => {
     try{
-        const posts = await Post.findAll({
-            include: [
-                {
-                    model: User,
-                    as: 'user',
-                    attributes: ['id', 'fullName', 'imagePath', ]
-                },
-            ],
-            attributes: { exclude: ['userId'] },
-            order: [['createdAt', 'DESC']]
-        })
-        
-        return handleSuccess(res, { message: "success retrieved from database", data: posts  });
+        const cachedJobs = await redisClient.get(process.env.REDIS_KEY_POST);
+        const { id } = req;
+        const userId = id;
+
+        if(cachedJobs){
+            return handleSuccess(res, { message: "Data from cache", data: JSON.parse(cachedJobs)  });
+        }else{
+            const posts = await Post.findAll({
+                include: [
+                    {
+                        model: User,
+                        as: 'user',
+                        attributes: ['id', 'fullName', 'imagePath', ]
+                    },
+                ],
+                attributes: { exclude: ['userId'] },
+                order: [['createdAt', 'DESC']]
+            })
+    
+            for (let post of posts) {
+                const hasVoted = await Vote.findOne({ where: { postId: post.id, userId } });
+                post.dataValues.hasVoted = !!hasVoted;
+            }
+            await redisClient.set(process.env.REDIS_KEY_POST, JSON.stringify(posts), 'EX', 100);
+            return handleSuccess(res, { message: "success retrieved from database", data: posts  });
+        }
     }catch(error){
         console.log(error);
         return handleServerError(res);
     }
 }
+
+
+
+
+exports.getAllPostsByUser = async (req, res) => {
+    try {
+        const { id } = req;
+        const userId = id;
+            const posts = await Post.findAll({
+                where: { userId: userId },
+                include: [
+                    {
+                        model: User,
+                        as: 'user',
+                        attributes: ['id', 'fullName', 'imagePath']
+                    },
+                ],
+                order: [['createdAt', 'DESC']]
+            });
+    
+            for (let post of posts) {
+                const hasVoted = await Vote.findOne({ where: { postId: post.id, userId } });
+                post.dataValues.hasVoted = !!hasVoted;
+            }
+    
+            if (!posts || posts.length === 0) {
+                return res.status(404).json({ message: 'No posts found for this user.' });
+            }
+            await redisClient.set(process.env.REDIS_KEY_MYPOST, JSON.stringify(posts), 'EX', 100);
+            return handleSuccess(res, { message: "success retrieved from database", data: posts  });
+        
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+
+exports.checkUserVote = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const { id } = req;
+        const userId = id;
+
+        const vote = await Vote.findOne({
+            where: {
+                userId: userId,
+                postId: postId
+            }
+        });
+
+        const hasVoted = vote !== null;
+        return res.json({ hasVoted });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
 
 
 exports.getPostById = async(req, res) => {
@@ -52,18 +125,43 @@ exports.getPostById = async(req, res) => {
 exports.createPost = async (req, res) => {
     try{
         const image = req.file ? req.file.path : null;
-         const postData = { ...req.body, ...(image && { image }) };
-        const userId = 1;
+        
+        const postData = { ...req.body, ...(image && { image }) };
+        const { id, role } = req;
+        const userId = id;
+
+        if (role === 'standard') {
+            const redisKey = `postRateLimit:${userId}`;
+            const lastPostTime = await redisClient.get(redisKey);
+
+            if (lastPostTime) {
+                const timeDiff = Date.now() - parseInt(lastPostTime);
+                if (timeDiff < 60000) { // 1 menit
+                    return res.status(429).json({ message: "Karna kamu belum bayar, maka kamu hanya bisa create post setiap 1 jam." });
+                }
+            }
+           
+            await redisClient.set(redisKey, Date.now().toString(), 'EX', 60); 
+        }
         const { error, handleRes } =  validateJoi(res, postData, schemaPost)
         if(error){
             return handleRes
         }
-
-        
+       
         const post = await Post.create({
             ...postData,
             userId
         })
+
+        try {
+            const cacheExists = await redisClient.exists(process.env.REDIS_KEY_POST);
+            if (cacheExists) {
+                await redisClient.del(process.env.REDIS_KEY_POST);
+                console.log('Cache cleared successfully');
+            }
+        } catch (cacheError) {
+            console.error('Error while clearing cache:', cacheError);
+        }
         
 
         return handleCreated(res, {
@@ -76,49 +174,166 @@ exports.createPost = async (req, res) => {
     }
 }
 
-// exports.updatePost = async (req, res) => {
-//     try{
-//         const postId = req.params.postId;
-//         const postData = req.body;
-//         const userId = 2;
+exports.updatePost = async (req, res) => {
+    try {
+        const imagePath = req?.file?.path;
+        const postId = req.params.postId;
+        const postData = req.body;
+        const { id } = req;
+        const userId = id;
 
-//         const existingPost = await Post.findByPk(postId);
-//         if (!existingPost) {
-//             return handleNotFound(res, 'Post not found or access denied');
-//         }
+        const { error, handleRes } = validateJoi(res, postData, schemaPost);
+        if (error) {
+            return handleRes;
+        }
 
+        const currentPost = await Post.findOne({ where: { id: postId, userId: userId } });
+        if (!currentPost) {
+            return handleResponse(res, 404, { message: 'Post not found or access denied' });
+        }
+
+        if (imagePath) {
+            postData.image = imagePath.replace(/\//g, '\\'); 
         
+            if (currentPost.image) {
+                const fullOldImagePath = path.join(__dirname, '..', currentPost.image); 
+    
+                fs.unlink(fullOldImagePath, (err) => {
+                    if (err) {
+                        console.error('Failed to delete old image:', err);
+                    }
+                });
+            }
+        }
 
-//          // Handle pengunggahan gambar baru
-//          if (req.file) {
-//             const imagePath = req.file.path;
-//             postData.imagePath = imagePath;
+        await Post.update(postData, { where: { id: postId } });
+        try {
+            const cacheExists = await redisClient.exists(process.env.REDIS_KEY_POST);
+            if (cacheExists) {
+                await redisClient.del(process.env.REDIS_KEY_POST);
+                console.log('Cache cleared successfully');
+            }
+        } catch (cacheError) {
+            console.error('Error while clearing cache:', cacheError);
+        }
+        
+        return handleCreated(res, { message: "success update data" });
+    } catch (error) {
+        console.log(error);
+        return handleServerError(res);
+    }
+};
 
-//             // Hapus gambar lama
-//             if (existingPost.imagePath) {
-//                 const oldImagePath = path.join(__dirname, '..', existingPost.imagePath);
-//                 unlink(oldImagePath, (err) => {
-//                     if (err) console.error('Failed to delete old image:', err);
-//                 });
-//             }
-//         }
 
-//         // Validasi input
-//         const { error } = validateJoi(postData, schemaPost);
-//         if (error) {
-//             return handleResponse(res, 400, { message: error.details[0].message });
-//         }
+exports.deletePost = async(req, res) => {
+    try{
+        const postId = req.params.postId
+        const { id } = req;
+        const userId = id;
 
-//         console.log(postData)
-//         // Perbarui data
-//         await Post.update(postData, { where: { id: postId, userId } });
+        const postToDelete = await Post.findOne({ where: { id: postId, userId: userId } });
+        if (!postToDelete) {
+            return res.status(404).json({ message: "Post not found or you're not authorized to delete this post." });
+        }
 
-//         return handleCreated(res, {
-//             message: "Post updated successfully",
-//             post: await Post.findByPk(postId)
-//         });
-//     }catch(error){
-//         console.log(error);
-//         return handleServerError(res);
-//     }
-// }
+        await postToDelete.destroy();
+        try {
+            const cacheExists = await redisClient.exists(process.env.REDIS_KEY_POST);
+            if (cacheExists) {
+                await redisClient.del(process.env.REDIS_KEY_POST);
+                console.log('Cache cleared successfully');
+            }
+        } catch (cacheError) {
+            console.error('Error while clearing cache:', cacheError);
+        }
+        
+        return res.status(200).json({ message: 'Post successfully deleted.' });
+    }catch(error){
+        console.log(error);
+        return handleServerError(res);
+    }
+}
+
+//login
+exports.likePost = async (req, res) => {
+
+    try{
+        const { postId } = req.params
+        const { id } = req;
+        const userId = id;
+        const { voteValue } = req.body
+        // const userId = 1;
+
+        const [vote, created ] = await Vote.findOrCreate({
+            where: { userId, postId },
+            defaults: {userId, postId, value: voteValue}
+        })
+
+        if(!created && vote.value !== voteValue){
+            vote.value = voteValue
+            await vote.save()
+        }
+
+        const totalLikes = (await Vote.sum('value', { where: { postId } })) || 0;
+        await Post.update({ voteCount: totalLikes }, { where: { id: postId } });
+
+        const updatedPost = await Post.findByPk(postId, {
+            include: [
+              {
+                model: User,
+                as: 'user',
+                attributes: ['id', 'fullName', 'email'],
+              },
+            ],
+            attributes: { exclude: ['userId'] },
+          });
+      
+          return handleResponse(res, 200, {
+            updatedPost,
+            message: 'Voted post.',
+          });
+    }catch(error){
+        console.log(error);
+        return handleServerError(res);
+    }
+}
+
+exports.unlikePost = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const { id } = req;
+        const userId = id; 
+
+        const vote = await Vote.findOne({
+            where: { userId, postId }
+        });
+
+        if (vote) {
+            await vote.destroy();
+
+            const totalLikes = (await Vote.sum('value', { where: { postId } })) || 0;
+            await Post.update({ voteCount: totalLikes }, { where: { id: postId } });
+
+            const updatedPost = await Post.findByPk(postId, {
+                include: [
+                    {
+                        model: User,
+                        as: 'user',
+                        attributes: ['id', 'fullName', 'email'],
+                    },
+                ],
+                attributes: { exclude: ['userId'] },
+            });
+
+            return handleResponse(res, 200, {
+                updatedPost,
+                message: 'Unliked post successfully.',
+            });
+        } else {
+            return handleResponse(res, 404, { message: 'Vote not found.' });
+        }
+    } catch (error) {
+        console.log(error);
+        return handleServerError(res);
+    }
+};

@@ -1,15 +1,22 @@
 const { User, Comment, Post } = require("../models");
 const Joi = require("joi");
-// const { default: axios } = require("axios");
 const midtransClient = require('midtrans-client')
+const {
+  createToken,
+} = require("../utils/jwtUtil");
+const redisClient = require('../utils/redisClient');
 
+const {
+  handleServerError,
+  handleSuccess,
+  handleResponse,
+  handleNotFound,
+} = require("../helpers/handleResponseHelper");
 
 const postComment = async (req, res) => {
   try {
-    // const userId = req.id
-    // const { id } = req.params
-    const userId = 1;
-    const id = 1;
+    const userId = req.id
+    const { id } = req.params
     const commentSchema = Joi.object({
       comment: Joi.string().required(),
     });
@@ -19,7 +26,7 @@ const postComment = async (req, res) => {
 
     const { comment } = value;
 
-    const createComment = await Comment.create({ comment, postId: id, userId })
+    const createComment = await Comment.create({ comment, postId: id, userId: userId })
     res.status(201).json({
       createComment,
       message: 'Success add comment'
@@ -46,10 +53,7 @@ const deleteComment = async (req, res) => {
 
 const editComment = async (req, res) => {
   try {
-    // const userId = req.id
     const { id } = req.params
-    const userId = 1;
-    // const id = 1;
     const findComment = await Comment.findOne({ where: { id } });
     if (!findComment) return res.status(400).json({ message: "error" });
 
@@ -78,8 +82,7 @@ const editComment = async (req, res) => {
 
 const midtrans = async (req, res) => {
   try {
-    // const { payload } = req.body //ngirim id dari client
-    // const findUser = await User.findByPk(+req.additionalData.userId);
+    const findUser = await User.findByPk(+req.id);
     let snap = new midtransClient.Snap({
       isProduction: false,
       serverKey: process.env.MIDTRANS_SERVER_KEY,
@@ -87,21 +90,68 @@ const midtrans = async (req, res) => {
     let parameter = {
       transaction_details: {
         order_id: Math.floor(Math.random() * 100000),
-        gross_amount: 10000,
+        gross_amount: 200000,
       },
       credit_card: {
         secure: true,
       },
       customer_details: {
-        email: "GOD@Gmail.com",
-        email: findUser.email,
+        email: findUser?.dataValues?.email,
+        first_name: findUser?.dataValues?.fullName,
       },
     };
-    // const midtrans_token = await snap.createTransaction(parameter);
-    // await User.update({ role: "pro" }, {
-    //   where: { id: id }
-    // })
+    const midtrans_token = await snap.createTransaction(parameter);
     res.status(201).json(midtrans_token);
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+const updateRoleStatus = async (req, res) => {
+  try {
+    const findUser = await User.findOne({ where: { id: req.id } });
+    if (!findUser) return res.status(400).json({ message: "User not found" });
+
+    if (findUser.role === 'pro') {
+      return res.status(400).json({ message: "The role is already pro" })
+    }
+    await User.update({ role: "pro" }, {
+      where: { id: req.id }
+    })
+
+    const findUpdateUser = await User.findOne({ where: { id: req.id } });
+    const token = createToken(findUpdateUser);
+    redisClient.setex(findUpdateUser.id.toString(), 24 * 60 * 60, token);
+    if (!token) {
+      throw new Error("Token Created failed");
+    }
+    return handleSuccess(res, {
+      token: token,
+      message: "success",
+    });
+
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+const getCommentById = async (req, res) => {
+  try {
+    const { id } = req.params
+    const user = await User.findOne({ where: { id: req.id } })
+    const dataComment = await Comment.findAll({
+      where: { postId: id },
+      include: [
+        {
+          model: User,
+          attributes: ["fullName", "imagePath", "id"]
+        }
+      ]
+    })
+    res.status(201).json({
+      dataComment,
+      user
+    });
   } catch (err) {
     console.log(err);
   }
@@ -109,7 +159,9 @@ const midtrans = async (req, res) => {
 
 module.exports = {
   postComment,
+  getCommentById,
   deleteComment,
   editComment,
-  midtrans
+  midtrans,
+  updateRoleStatus
 }

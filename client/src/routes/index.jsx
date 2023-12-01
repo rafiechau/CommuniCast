@@ -9,13 +9,14 @@ import Detail from '@pages/Detail';
 import ResetPassword from '@pages/ResetPassword';
 import Profile from '@pages/Profile';
 import EditProfile from '@pages/EditProfile';
+import MyPost from '@pages/MyPost';
 import Message from '@pages/Message';
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    protected: false,
+    protected: true,
     component: Home,
     layout: MainLayout,
   },
@@ -55,6 +56,13 @@ const routes = [
     name: 'Edit Profile',
     protected: true,
     component: EditProfile,
+    layout: MainLayout,
+  },
+  {
+    path: '/myPost',
+    name: 'My Posts',
+    protected: true,
+    component: MyPost,
     layout: MainLayout,
   },
   {
