@@ -10,6 +10,7 @@ import config from '@config/index';
 import { updatePostById } from '@pages/EditPost/action';
 import 'react-quill/dist/quill.snow.css';
 import classes from './style.module.scss';
+import { FormattedMessage } from 'react-intl';
 
 const EditPostDialog = ({ open, onClose, post, token }) => {
   const dispatch = useDispatch();
@@ -44,7 +45,7 @@ const EditPostDialog = ({ open, onClose, post, token }) => {
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>
-        Edit Post
+        <FormattedMessage id="app_header_edit_post" />
         <IconButton onClick={onClose} style={{ position: 'absolute', right: 8, top: 8 }}>
           <CloseIcon />
         </IconButton>
@@ -55,7 +56,7 @@ const EditPostDialog = ({ open, onClose, post, token }) => {
             margin="normal"
             required
             fullWidth
-            label="Title"
+            label={<FormattedMessage id="app_form_title" />}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
@@ -63,7 +64,7 @@ const EditPostDialog = ({ open, onClose, post, token }) => {
             margin="normal"
             required
             fullWidth
-            label="Short Description"
+            label={<FormattedMessage id="app_form_short_des" />}
             value={shortDescription}
             onChange={(e) => setShortDescription(e.target.value)}
           />
@@ -71,7 +72,9 @@ const EditPostDialog = ({ open, onClose, post, token }) => {
             {preview ? (
               <img src={preview} alt="Preview" className={classes.imagePreview} />
             ) : (
-              <span className={classes.dropTitle}>Click or drop file here</span>
+              <span className={classes.dropTitle}>
+                <FormattedMessage id="app_form_image" />
+              </span>
             )}
             <input
               type="file"
@@ -83,7 +86,7 @@ const EditPostDialog = ({ open, onClose, post, token }) => {
           </label>
           <ReactQuill className={classes.quill} theme="snow" value={des} onChange={setDes} />
           <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-            Save Changes
+            <FormattedMessage id="app_edit_post" />
           </Button>
         </Box>
       </DialogContent>

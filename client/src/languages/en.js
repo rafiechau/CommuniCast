@@ -38,6 +38,8 @@ export default {
   app_profile_edit: 'Edit Profile',
   app_account_type: 'Account Type',
   app_user: 'User',
+  app_edit_post: 'Save Changes',
+  app_header_edit_post: 'Edit Post',
 
   // delete dialog
   app_confirmation_delete_dialog: 'Confirmation Delete',

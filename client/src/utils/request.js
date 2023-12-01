@@ -17,8 +17,7 @@ axios.interceptors.response.use(
   (error) => {
     const { dispatch } = store;
     if (error.response?.status === 401) {
-      dispatch(actionHandleLogout());
-      window.location.href('/login');
+      dispatch(actionHandleLogout(() => window.location.href('/login')));
     }
     return Promise.reject(error);
   }

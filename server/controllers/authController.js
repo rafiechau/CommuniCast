@@ -225,7 +225,7 @@ exports.editPhotoProfile = async (req, res) => {
     if (!isExist) {
       return handleNotFound(res);
     }
-    if (isExist.imagePath !== "uploads/default.jpg") {
+    if (isExist.imagePath && isExist.imagePath !== "uploads/default.jpg") {
       unlink(isExist.imagePath, (err) => {});
     }
     const response = await isExist.update({ imagePath: image });
@@ -317,7 +317,11 @@ exports.deleteUser = async (req, res) => {
     await User.destroy({ where: { id: id } });
     const userStream = await chatStreamClient.queryUsers({ id: id.toString() });
     if (userStream.users.length > 0) {
-      await chatStreamClient.deleteUser(id.toString());
+      await chatStreamClient.deleteUser(id.toString(),{
+        delete_conversation_channels:true,
+        mark_messages_deleted:true,
+        hard_delete:true
+      });
     }
     return handleSuccess(res, { message: "deleted user" });
   } catch (error) {

@@ -29,7 +29,9 @@ const CustomChannelPreview = ({
         <div className={classes.wrapText}>
           <div className={classes.userName}>{displayTitle}</div>
           <div className={classes.lastMessage}>
-            {lastMessage && (lastMessage?.text !== '' || lastMessage?.text !== 'This message was deleted...')
+            {lastMessage &&
+            lastMessage.type !== 'deleted' &&
+            (lastMessage?.text !== '' || lastMessage?.text !== 'This message was deleted...')
               ? handleDecrypt()
               : lastMessage?.text}
             {typeof latestMessage === 'string' && latestMessage}

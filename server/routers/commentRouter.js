@@ -15,7 +15,7 @@ const {
 router.get("/comment/:id", authenticationMiddleware, getCommentById)
 router.post("/comment/:id", authenticationMiddleware, postComment);
 router.put("/comment/:id",authenticationMiddleware, authorizationRolePro, editComment)
-router.delete("/comment/:id", authorizationRolePro, deleteComment)
+router.delete("/comment/:id", deleteComment)
 router.post("/midtras", authenticationMiddleware, midtrans)
 router.put("/payment", authenticationMiddleware, updateRoleStatus)
 

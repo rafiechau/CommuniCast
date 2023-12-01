@@ -18,6 +18,14 @@ export const CreatePostDialog = ({ open, onClose }) => {
   const [des, setDes] = useState('');
   const [preview, setPreview] = useState('');
 
+  const resetForm = () => {
+    setTitle('');
+    setShortDescription('');
+    setDes('');
+    setImage(null);
+    setPreview('');
+  };
+
   const handleFiles = (files) => {
     if (files.length > 0) {
       const file = files[0];
@@ -47,6 +55,7 @@ export const CreatePostDialog = ({ open, onClose }) => {
       formData.append('image', image);
     }
     dispatch(createPost(formData));
+    resetForm();
     onClose();
   };
   return (

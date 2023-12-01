@@ -21,7 +21,6 @@ function* sagaHandleLogin({ data, callback }) {
     yield put(setUser({ role, id, fullName }));
     toast.success(response.message);
   } catch (error) {
-    console.log(error)
     if (error?.response?.status === 400) {
       toast.error(error.response.data.message);
     } else {
@@ -36,10 +35,10 @@ function* sagaHandleLogout({ callback }) {
   try {
     const response = yield call(apiHandleLogout);
     toast.success(response.message);
+    yield call(callback);
     yield put(setLogin(false));
     yield put(setToken(null));
     yield put(setUser(null));
-    yield call(callback);
   } catch (error) {
     if (error?.response?.status === 400) {
       toast.error(error.response.data.message);
