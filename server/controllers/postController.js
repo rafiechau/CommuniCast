@@ -254,7 +254,7 @@ exports.deletePost = async(req, res) => {
     }
 }
 
-//login
+
 exports.likePost = async (req, res) => {
 
     try{
@@ -262,7 +262,6 @@ exports.likePost = async (req, res) => {
         const { id } = req;
         const userId = id;
         const { voteValue } = req.body
-        // const userId = 1;
 
         const [vote, created ] = await Vote.findOrCreate({
             where: { userId, postId },
@@ -290,7 +289,7 @@ exports.likePost = async (req, res) => {
       
           return handleResponse(res, 200, {
             updatedPost,
-            message: 'Voted post.',
+            message: 'Like post.',
           });
     }catch(error){
         console.log(error);

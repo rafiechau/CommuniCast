@@ -16,7 +16,6 @@ router.get('/:postId', authenticationMiddleware, getPostById);
 router.use(authenticationMiddleware);
 
 router.get('/', getPosts);
-
 router.get('/check-vote/:postId', checkUserVote);
 router.post('/create', multerMiddleware, createPost)
 router.put('/update/:postId', authorizationRolePro,multerMiddleware, updatePost)
