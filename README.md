@@ -19,6 +19,7 @@ Express.js project with basic routes:
 - stream-chat
 - ioRedis
 - midTrans
+- react-quill
 
 ---
 
@@ -62,6 +63,8 @@ STREAM_SECRET=stream chat secret key from etStream.io
 
 MY_EMAIL=email
 EMAIL_PASSWORD="password"
+REDIS_KEY_POST=post
+REDIS_KEY_MYPOST=mypost
 
 CLIENT_URL=http://localhost:3000/
 CLIENT_HOST=http://localhost:3000
@@ -624,3 +627,428 @@ _Response (200)_
 ```
 
 ---
+
+### GET /api/posts/
+
+> Get All Post
+
+_Request Header_
+
+```
+Bearer Token
+```
+
+_Request Body_
+
+```
+no need
+```
+
+_Response (200)_
+
+```
+{
+    message: "success retrieved from database"
+    "data": [
+        {
+            "id": 5,
+            "title": "[PETUALANGAN BERUJUNG KEMATIAN: TERJEBAK DI GUA]",
+            "shortDescription": "Di Utah, Amerika Serikat, ada sebuah gua yang menjadi tempat penjelajahan favorit warga lokal.  Pada 2009, gua itu ditutup permanen setelah seorang penjelajah meninggal karena terbalik dan terjebak di dalam...",
+            "des": "<p>efef</p>",
+            "image": null,
+            "voteCount": 0,
+            "createdAt": "2023-12-01T09:57:02.000Z",
+            "updatedAt": "2023-12-02T09:23:24.000Z",
+            "user": {
+                "id": 4,
+                "fullName": "Rafie Chau",
+                "imagePath": "uploads\\1701423933888.png"
+            },
+            "hasVoted": false
+        }
+    ]
+}
+
+_Response (404, not found)_
+
+```
+ {message:"Data Not Found"}
+
+```
+
+### GET /api/posts/my-post
+
+> Get My Post
+
+_Request Header_
+
+```
+Bearer Token
+```
+
+_Request Body_
+
+```
+no need
+```
+
+_Response (200)_
+
+```
+{
+    message: "success retrieved from database"
+    "data": [
+        {
+            "id": 2,
+            "title": "Menunggu capres blunder di pulau pramuka",
+            "shortDescription": "dcmlwdcmd",
+            "des": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+            "image": null,
+            "voteCount": 0,
+            "createdAt": "2023-12-01T09:02:45.000Z",
+            "updatedAt": "2023-12-02T09:30:31.000Z",
+            "userId": 1,
+            "user": {
+                "id": 1,
+                "fullName": "Ahmad Alif Sofian",
+                "imagePath": "uploads/default.jpg"
+            },
+            "hasVoted": false
+        }
+    ]
+}
+
+_Response (404, not found)_
+
+```
+ {message:"Data Not Found"}
+
+```
+
+### GET /api/posts/:postId
+
+> Get Detail Post
+
+_Request Header_
+
+```
+Bearer Token
+```
+_Request Body_
+
+```
+no need
+```
+
+_Request Params_
+
+```
+/<postId>
+```
+
+_Response (200)_
+
+```
+{
+    message: "success retrieved from database"
+    "data": [
+        {
+            "id": 2,
+            "title": "Menunggu capres blunder di pulau pramuka",
+            "shortDescription": "dcmlwdcmd",
+            "des": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+            "image": null,
+            "voteCount": 0,
+            "createdAt": "2023-12-01T09:02:45.000Z",
+            "updatedAt": "2023-12-02T09:30:31.000Z",
+            "userId": 1,
+            "user": {
+                "id": 1,
+                "fullName": "Ahmad Alif Sofian",
+                "imagePath": "uploads/default.jpg"
+            },
+            "hasVoted": false
+        }
+    ]
+}
+
+_Response (404, not found)_
+
+```
+ {message:"Data Not Found"}
+
+```
+
+### GET /api/posts/check-vote/:postId
+
+> Ceck user vote
+
+_Request Header_
+
+```
+Bearer Token
+```
+
+_Request Params_
+
+```
+/<postId>
+```
+_Request Body_
+
+```
+no need
+```
+
+
+_Response (200)_
+
+```
+{
+    "hasVoted": false
+}
+
+_Response (404, not found)_
+
+```
+ {message:"Data Not Found"}
+
+```
+
+### POST /api/posts/create
+
+> Create Post
+
+_Request Header_
+
+```
+Bearer Token
+```
+
+_Request Params_
+
+```
+no need
+```
+_Request Body_
+
+```
+{
+    "image":"image",
+    "title":"string"
+    "shortDescription":"string"
+    "des":"string"
+    "voteCount": "integer (default 0)" 
+}
+```
+
+
+_Response (200)_
+
+
+{
+    "message": "success, Your post has been created",
+    "data": {
+        "voteCount": 0,
+        "id": 8,
+        "title": "judul 1",
+        "shortDescription": "short description",
+        "des": "123",
+        "image": "uploads\\1701522607462.png",
+        "userId": 1,
+        "updatedAt": "2023-12-02T13:10:07.477Z",
+        "createdAt": "2023-12-02T13:10:07.477Z"
+    }
+}
+```
+
+_Response (429)_
+
+```
+ {
+    message:"Karna kamu belum bayar, maka kamu hanya bisa create post setiap 1 jam."
+}
+
+```
+
+_Response (400)_
+
+```
+{
+    "status": "Validation Failed",
+    "message": "\"title\" is required"
+}
+
+```
+
+### PUT /api/posts/update/<postId>
+
+> Update Post
+
+_Request Header_
+
+```
+Bearer Token
+```
+
+_Request Params_
+
+```
+/<postId>
+```
+_Request Body_
+
+```
+{
+    "image":"image",
+    "title":"string"
+    "shortDescription":"string"
+    "des":"string"
+    "voteCount": "integer (default 0)" 
+}
+```
+
+
+_Response (200)_
+
+
+{
+    "message": "success update data"
+}
+```
+
+
+_Response (400)_
+
+```
+{
+    "status": "Validation Failed",
+    "message": "\"title\" is required"
+}
+
+```
+
+### DELETE /api/posts/delete/<postId>
+
+> Update Post
+
+_Request Header_
+
+```
+Bearer Token
+```
+
+_Request Params_
+
+```
+/<postId>
+```
+_Request Body_
+
+```
+no need
+```
+
+_Response (200)_
+
+{ 
+    message: 'Post successfully deleted.' 
+}
+```
+
+### POST /api/posts/like/<postId>
+
+> Like Post
+
+_Request Header_
+
+```
+Bearer Token
+```
+
+_Request Params_
+
+```
+/<postId>
+```
+_Request Body_
+
+```
+no need
+```
+
+_Response (200)_
+
+{
+    "updatedPost": {
+        "id": 2,
+        "title": "Menunggu capres blunder di pulau pramuka",
+        "shortDescription": "dcmlwdcmd",
+        "des": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+        "image": null,
+        "voteCount": 1,
+        "createdAt": "2023-12-01T09:02:45.000Z",
+        "updatedAt": "2023-12-02T13:25:21.000Z",
+        "user": {
+            "id": 1,
+            "fullName": "Ahmad Alif Sofian",
+            "email": "alif12sofian@gmail.com"
+        }
+    },
+    "message": "Like post."
+}
+```
+
+### POST /api/posts/unlike/<postId>
+
+> Like Post
+
+_Request Header_
+
+```
+Bearer Token
+```
+
+_Request Params_
+
+```
+/<postId>
+```
+_Request Body_
+
+```
+no need
+```
+
+_Response (200)_
+
+{
+    "updatedPost": {
+        "id": 2,
+        "title": "Menunggu capres blunder di pulau pramuka",
+        "shortDescription": "dcmlwdcmd",
+        "des": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+        "image": null,
+        "voteCount": 0,
+        "createdAt": "2023-12-01T09:02:45.000Z",
+        "updatedAt": "2023-12-02T13:28:04.000Z",
+        "user": {
+            "id": 1,
+            "fullName": "Ahmad Alif Sofian",
+            "email": "alif12sofian@gmail.com"
+        }
+    },
+    "message": "Unliked post successfully."
+}
+```
+
+_Response (400)_
+
+```
+{
+    "message": "Vote not found"
+}
+
+```
+
+```
