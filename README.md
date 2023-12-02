@@ -628,6 +628,7 @@ _Response (200)_
 
 ---
 
+## POST ROUTE
 ### GET /api/posts/
 
 > Get All Post
@@ -668,6 +669,7 @@ _Response (200)_
         }
     ]
 }
+```
 
 _Response (404, not found)_
 
@@ -717,7 +719,7 @@ _Response (200)_
         }
     ]
 }
-
+```
 _Response (404, not found)_
 
 ```
@@ -771,7 +773,7 @@ _Response (200)_
         }
     ]
 }
-
+```
 _Response (404, not found)_
 
 ```
@@ -807,7 +809,7 @@ _Response (200)_
 {
     "hasVoted": false
 }
-
+```
 _Response (404, not found)_
 
 ```
@@ -845,7 +847,7 @@ _Request Body_
 
 _Response (200)_
 
-
+```
 {
     "message": "success, Your post has been created",
     "data": {
@@ -911,7 +913,7 @@ _Request Body_
 
 _Response (200)_
 
-
+```
 {
     "message": "success update data"
 }
@@ -950,7 +952,7 @@ no need
 ```
 
 _Response (200)_
-
+```
 { 
     message: 'Post successfully deleted.' 
 }
@@ -978,7 +980,7 @@ no need
 ```
 
 _Response (200)_
-
+```
 {
     "updatedPost": {
         "id": 2,
@@ -1021,7 +1023,7 @@ no need
 ```
 
 _Response (200)_
-
+```
 {
     "updatedPost": {
         "id": 2,
@@ -1051,4 +1053,3 @@ _Response (400)_
 
 ```
 
-```
